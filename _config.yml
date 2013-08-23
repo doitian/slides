@@ -5,7 +5,6 @@ permalink: /:categories/:year/:month/:title
 exclude: [".rvmrc", ".rbenv-version", "README.md", "Rakefile", "changelog.md", "reveal.js", "vendor"]
 pygments: true
 lsi: false
-safe: true
 markdown: redcarpet
 
 # Themes are encouraged to use these universal variables 
