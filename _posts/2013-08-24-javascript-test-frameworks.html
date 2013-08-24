@@ -1,0 +1,649 @@
+---
+layout: presentation
+title: Javascript Test Frameworks
+tag: [javascript, test]
+description: 
+---
+<section>
+<h1>Javascript Test Frameworks</h1>
+<h2>Ian Yang</h2>
+<h2><a href="mailto:me@iany.me">me@iany.me</a></h2>
+<h2></h2></section>
+<section>
+<h2>Table of Contents</h2><ul>
+<li>
+<a href="#sec-1">Frameworks</a>
+</li>
+<li>
+<a href="#sec-2">Jasmine 2.0</a>
+</li>
+<li>
+<a href="#sec-3">Mocha</a>
+</li>
+<li>
+<a href="#sec-4">QUnit</a>
+</li>
+</ul>
+</section>
+
+<section id="sec-1" >
+
+<h2>Frameworks</h2>
+<p>
+Over <b>30</b> different frameworks listed in <a href="http://en.wikipedia.org/wiki/List_of_unit_testing_frameworks#JavaScript">Wiki</a>
+</p>
+
+</section>
+<section>
+<section id="sec-1-1" >
+
+<h3>Most Popular</h3>
+<ul class="org-ul">
+<li><a href="http://pivotal.github.io/jasmine/">Jasmine</a>
+</li>
+<li><a href="http://visionmedia.github.io/mocha/">Mocha</a>
+</li>
+<li><a href="http://qunitjs.com/">QUnit</a>
+</li>
+</ul>
+</section>
+</section>
+<section>
+<section id="sec-1-2" >
+
+<h3>Comparison</h3>
+<ul class="org-ul">
+<li>Test Organization
+</li>
+<li>Assert
+</li>
+<li>Async Test
+</li>
+<li>Browser Report
+</li>
+<li>Debug
+</li>
+</ul>
+</section>
+</section>
+<section id="sec-2"  data-background="#072933">
+
+<h2>Jasmine 2.0</h2>
+
+<ul class="org-ul">
+<li>A behavior-driven development framework.
+</li>
+<li>Built-in assert library
+</li>
+<li>Built-in mocking
+</li>
+</ul>
+
+</section>
+<section>
+<section id="sec-2-1"  data-background="#072933">
+
+<h3>Test Organization</h3>
+
+<p>
+RSpec style
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-coffee">describe <span style="color: #cc9393;">'1 + 1'</span>, <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> it <span style="color: #cc9393;">'equals to 2'</span>, <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> ...
+<span style="background-color: #4f4f4f;"> </span> describe <span style="color: #cc9393;">'using binary'</span>, <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> it <span style="color: #cc9393;">'equals to 10'</span>, <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> ...
+</pre>
+</div>
+</section>
+</section>
+<section>
+<section id="sec-2-2"  data-background="#072933">
+
+<h3>Setup and Teardown</h3>
+
+<div class="org-src-container">
+
+<pre class="src src-coffee">describe <span style="color: #cc9393;">'1 + 1'</span>, <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="color: #f0dfaf;">a</span> = nil; <span style="color: #f0dfaf;">b</span> = nil
+
+<span style="background-color: #4f4f4f;"> </span> <span style="color: #7f9f7f;"># context is shared between hooks and tests</span>
+<span style="background-color: #4f4f4f;"> </span> before <span style="color: #f0dfaf;">-&gt;</span> <span style="color: #7f9f7f;"># run once before all tests in this suite</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> <span style="color: #f0dfaf;">a</span> = 1; <span style="color: #f0dfaf;">b</span> = 1
+<span style="background-color: #4f4f4f;"> </span> after <span style="color: #f0dfaf;">-&gt;</span> <span style="color: #7f9f7f;"># run once after all tests in this suite</span>
+<span style="background-color: #4f4f4f;"> </span> beforeEach <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> <span style="color: #f0dfaf;">@result</span> = a + b
+<span style="background-color: #4f4f4f;"> </span> afterEach <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> it <span style="color: #cc9393;">'equals to 2'</span>, <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> console.log <span style="color: #f0dfaf;">@result</span>
+</pre>
+</div>
+</section>
+</section>
+<section>
+<section id="sec-2-3"  data-background="#072933">
+
+<h3>Assert</h3>
+
+<p>
+Built-in <code>expect</code>, matchers are extensible.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-coffee">expect(1+1).toEqual(2)
+expect(message).<span style="color: #f0dfaf; font-weight: bold;">not</span>.toMatch(<span style="color: #dca3a3; font-weight: bold;">/Opps/</span>)
+</pre>
+</div>
+</section>
+</section>
+<section>
+<section id="sec-2-4"  data-background="#072933">
+
+<h3>Async Test</h3>
+
+<div class="org-src-container">
+
+<pre class="src src-coffee">describe <span style="color: #cc9393;">'Async Test'</span>, <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="color: #f0dfaf;">a</span> = b = <span style="color: #dca3a3; font-weight: bold;">null</span>
+
+<span style="background-color: #4f4f4f;"> </span> beforeEach (done) <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> setTimeout((<span style="color: #f0dfaf;">-&gt;</span> <span style="color: #f0dfaf;">a</span> = b = 1; done()), 500)
+
+<span style="background-color: #4f4f4f;"> </span> it <span style="color: #cc9393;">'passes'</span>, (done) <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> setTimeout((<span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> expect(a + b).toEqual(2)
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> done()
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> ), 500)
+</pre>
+</div>
+</section>
+</section>
+<section>
+<section id="sec-2-5"  data-background="#072933">
+
+<h3>Async Test 1.3 Way</h3>
+
+<ul class="org-ul">
+<li>Manual test and wait.
+</li>
+<li>Split test into <code>runs</code> and <code>waitsFor</code>.
+</li>
+<li>Test fails when <code>waitsFor</code> times out.
+</li>
+</ul>
+
+<blockquote>
+<p>
+<a href="https://github.com/pivotal/jasmine/wiki/Asynchronous-specs">wiki:Asynchronous-specs</a>
+</p>
+</blockquote>
+</section>
+</section>
+<section>
+<section id="sec-2-6"  data-background="#072933">
+
+<h3>Async Test 1.3 Example</h3>
+
+<div class="org-src-container">
+
+<pre class="src src-coffee">describe <span style="color: #cc9393;">'Async Test'</span>, <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="color: #f0dfaf;">a</span> = b = <span style="color: #dca3a3; font-weight: bold;">null</span>
+
+<span style="background-color: #4f4f4f;"> </span> beforeEach <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> <span style="color: #f0dfaf;">done</span> = <span style="color: #dca3a3; font-weight: bold;">false</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> runs <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> setTimeout((<span style="color: #f0dfaf;">-&gt;</span> <span style="color: #f0dfaf;">a</span> = b = 1; <span style="color: #f0dfaf;">done</span> = <span style="color: #dca3a3; font-weight: bold;">true</span>), 500)
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> waitsFor((<span style="color: #f0dfaf;">-&gt;</span> done), <span style="color: #cc9393;">"Should finish"</span>, 750)
+
+<span style="background-color: #4f4f4f;"> </span> it <span style="color: #cc9393;">'passes'</span> , <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> <span style="color: #f0dfaf;">done</span> = <span style="color: #dca3a3; font-weight: bold;">false</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> <span style="color: #f0dfaf;">result</span> = <span style="color: #dca3a3; font-weight: bold;">null</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> runs <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> setTimeout((<span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> <span style="color: #f0dfaf;">result</span> = a + b
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> <span style="color: #f0dfaf;">done</span> = <span style="color: #dca3a3; font-weight: bold;">true</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> ), 500)
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> waitsFor((<span style="color: #f0dfaf;">-&gt;</span> done), <span style="color: #cc9393;">"Should finish"</span>, 750)
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> runs <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> expect(result).toEqual(2)
+</pre>
+</div>
+
+</section>
+<section>
+
+
+<div class="figure">
+<p><img src="https://www.evernote.com/shard/s2/sh/d0f38ed6-f1e7-4650-bc1c-e4e4d0f92f11/eac84a8dbc49a57f60f737e9458e2b4a/deep/0/failure-disappointed-young-man-looking-at-laptop-small1.png"  alt="failure-disappointed-young-man-looking-at-laptop-small1.png"/></p>
+</div>
+</section>
+</section>
+<section>
+<section id="sec-2-7"  data-background="#072933">
+
+<h3>Browser Report</h3>
+
+
+<div id="Jasmine-Spec-Runner" class="figure">
+<p><img src="https://www.evernote.com/shard/s2/sh/f9ded913-c043-497d-ad97-3c9cb9d6d549/6961d397e72578d7e26a40d48e50c174/deep/0/Jasmine Spec Runner.png"  alt="Jasmine Spec Runner.png"/></p>
+<p>Jasmine Spec Runner</p>
+</div>
+</section>
+</section>
+<section>
+<section id="sec-2-8"  data-background="#072933">
+
+<h3>Detailed Error Message</h3>
+
+
+<div id="Jasmine-Spec-Runner-Error-Message" class="figure">
+<p><img src="https://www.evernote.com/shard/s2/sh/23fef4bf-3fe3-43f5-84f6-4c371844b083/da742eb8090949b228ac783dc26537df/deep/0/Jasmine Spec Runner Error Message.png"  alt="Jasmine Spec Runner Error Message.png"/></p>
+<p>Jasmine Spec Runner Error Message</p>
+</div>
+</section>
+</section>
+<section>
+<section id="sec-2-9"  data-background="#072933">
+
+<h3>Debug</h3>
+
+<ul class="org-ul">
+<li>Enable pause on exceptions in Chrome Console.
+</li>
+<li>1.3 does not throw exception,
+<ul class="org-ul">
+<li>Set break points manually.
+</li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section>
+<section id="sec-2-10"  data-background="#072933">
+
+<h3>Chrome Debug on Exception</h3>
+
+
+<div id="Chrome-Debugger" class="figure">
+<p><img src="https://www.evernote.com/shard/s2/sh/5ea73206-c860-43d0-b318-df1b28e95434/4f9de684fc483ff6d777fd8ffd46032f/deep/0/Chrome Pause on Exceptions.png"  alt="Chrome Pause on Exceptions.png"/></p>
+<p>Chrome Debugger</p>
+</div>
+</section>
+
+</section>
+<section>
+<section id="sec-2-11"  data-background="#072933">
+
+<h3>Demo Time</h3>
+
+<ul class="org-ul">
+<li><a href="http://doitian.github.io/javascript-test-demo/test/jasmine.html">Jasmine Demo</a>
+</li>
+<li><a href="https://github.com/doitian/javascript-test-demo/blob/gh-pages/test/jasmine.html">HTML Runner</a>
+</li>
+<li><a href="https://github.com/doitian/javascript-test-demo/blob/gh-pages/test/spec/jasmine_test.js">Test File</a>
+</li>
+</ul>
+</section>
+</section>
+<section id="sec-3"  data-background="#422D1D">
+
+<h2>Mocha</h2>
+
+<ul class="org-ul">
+<li>Configurable interface: <b>tdd</b>, <b>bdd</b>, <b>export</b>.
+</li>
+<li>Integrate <a href="http://chaijs.com/">chai</a>, <a href="http://github.com/visionmedia/should.js">should.js</a>, <a href="https://github.com/LearnBoost/expect.js">expect.js</a> or <a href="https://github.com/visionmedia/better-assert">better-assert</a> as assert library.
+</li>
+<li>No mocking.
+</li>
+<li>Easy to use async test.
+</li>
+</ul>
+
+</section>
+<section>
+<section id="sec-3-1"  data-background="#422D1D">
+
+<h3>Test Organization: TDD</h3>
+
+<div class="org-src-container">
+
+<pre class="src src-coffee">suite <span style="color: #cc9393;">'Array'</span>, <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> setup <span style="color: #f0dfaf;">-&gt;</span> <span style="color: #7f9f7f;"># ...</span>
+<span style="background-color: #4f4f4f;"> </span> suite <span style="color: #cc9393;">'#indexOf()'</span>, <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> test <span style="color: #cc9393;">'should return -1 when not present'</span>, <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> assert.equal(-1, [1,2,3].indexOf(4))
+</pre>
+</div>
+</section>
+</section>
+<section>
+<section id="sec-3-2"  data-background="#422D1D">
+
+<h3>Test Organization: BDD</h3>
+
+<div class="org-src-container">
+
+<pre class="src src-coffee">describe <span style="color: #cc9393;">'Array'</span>, <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> before <span style="color: #f0dfaf;">-&gt;</span> <span style="color: #7f9f7f;"># ...</span>
+
+<span style="background-color: #4f4f4f;"> </span> describe <span style="color: #cc9393;">'#indexOf()'</span>, <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> it <span style="color: #cc9393;">'should return -1 when not present'</span>, <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> [1,2,3].indexOf(4).should.equal(-1)
+</pre>
+</div>
+</section>
+</section>
+<section>
+<section id="sec-3-3"  data-background="#422D1D">
+
+<h3>Assert: Chai Assert</h3>
+
+<div class="org-src-container">
+
+<pre class="src src-coffee"><span style="color: #f0dfaf;">assert</span> = require(<span style="color: #cc9393;">'chai'</span>).assert
+<span style="color: #f0dfaf;">foo</span> = <span style="color: #cc9393;">'bar'</span>
+<span style="color: #f0dfaf;">beverages</span> = { <span style="color: #dfdfbf; font-weight: bold;">tea:</span> [ <span style="color: #cc9393;">'chai'</span>, <span style="color: #cc9393;">'matcha'</span>, <span style="color: #cc9393;">'oolong'</span> ] }
+
+assert.typeOf(foo, <span style="color: #cc9393;">'string'</span>, <span style="color: #cc9393;">'foo is a string'</span>)
+assert.equal(foo, <span style="color: #cc9393;">'bar'</span>, <span style="color: #cc9393;">'foo equal `bar`'</span>)
+assert.lengthOf(foo, 3, <span style="color: #cc9393;">'foo`s value has a length of 3'</span>)
+assert.lengthOf(beverages.tea, 3, <span style="color: #cc9393;">'beverages has 3 types of tea'</span>)
+</pre>
+</div>
+</section>
+</section>
+<section>
+<section id="sec-3-4"  data-background="#422D1D">
+
+<h3>Assert: Chai Expect</h3>
+
+<div class="org-src-container">
+
+<pre class="src src-coffee"><span style="color: #f0dfaf; font-weight: bold;">var</span> <span style="color: #f0dfaf;">expect</span> = require(<span style="color: #cc9393;">'chai'</span>).expect
+<span style="color: #f0dfaf;">foo</span> = <span style="color: #cc9393;">'bar'</span>
+<span style="color: #f0dfaf;">beverages</span> = { <span style="color: #dfdfbf; font-weight: bold;">tea:</span> [ <span style="color: #cc9393;">'chai'</span>, <span style="color: #cc9393;">'matcha'</span>, <span style="color: #cc9393;">'oolong'</span> ] }
+
+expect(foo).to.be.a(<span style="color: #cc9393;">'string'</span>)
+expect(foo).to.equal(<span style="color: #cc9393;">'bar'</span>)
+expect(foo).to.have.length(3)
+expect(beverages).to.have.property(<span style="color: #cc9393;">'tea'</span>).<span style="color: #f0dfaf; font-weight: bold;">with</span>.length(3)
+</pre>
+</div>
+</section>
+</section>
+<section>
+<section id="sec-3-5"  data-background="#422D1D">
+
+<h3>Assert: Chai Should</h3>
+
+<div class="org-src-container">
+
+<pre class="src src-coffee"><span style="color: #f0dfaf;">should</span> = require(<span style="color: #cc9393;">'chai'</span>).should() <span style="color: #7f9f7f;"># actually call the the function</span>
+<span style="color: #f0dfaf;">foo</span> = <span style="color: #cc9393;">'bar'</span>
+<span style="color: #f0dfaf;">beverages</span> = { <span style="color: #dfdfbf; font-weight: bold;">tea:</span> [ <span style="color: #cc9393;">'chai'</span>, <span style="color: #cc9393;">'matcha'</span>, <span style="color: #cc9393;">'oolong'</span> ] }
+
+foo.should.be.a(<span style="color: #cc9393;">'string'</span>)
+foo.should.equal(<span style="color: #cc9393;">'bar'</span>)
+foo.should.have.length(3)
+beverages.should.have.property(<span style="color: #cc9393;">'tea'</span>).<span style="color: #f0dfaf; font-weight: bold;">with</span>.length(3)
+</pre>
+</div>
+</section>
+</section>
+<section>
+<section id="sec-3-6"  data-background="#422D1D">
+
+<h3>Async Test</h3>
+
+<div class="org-src-container">
+
+<pre class="src src-coffee">describe <span style="color: #cc9393;">'Async Test'</span>, <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="color: #f0dfaf;">a</span> = b = <span style="color: #dca3a3; font-weight: bold;">null</span>
+
+<span style="background-color: #4f4f4f;"> </span> beforeEach (done) <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> setTimeout((<span style="color: #f0dfaf;">-&gt;</span> <span style="color: #f0dfaf;">a</span> = b = 1; done()), 500)
+
+<span style="background-color: #4f4f4f;"> </span> it <span style="color: #cc9393;">'passes'</span> , (done) <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> setTimeout((<span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> expect(a + b).toEqual(2)
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> done()
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> ), 500)
+</pre>
+</div>
+
+<p>
+Looks familiar?
+</p>
+</section>
+</section>
+<section>
+<section id="sec-3-7"  data-background="#422D1D">
+
+<h3>Browser Report</h3>
+
+
+<div id="Mocha-Spec-Runner" class="figure">
+<p><img src="https://www.evernote.com/shard/s2/sh/14117419-075b-4894-92c2-2559f16acd39/939afc12eda5159f58675d7a15809be8/deep/0/Mocha Spec Runner.png"  alt="Mocha Spec Runner.png"/></p>
+<p>Mocha HTML Reporter</p>
+</div>
+</section>
+</section>
+<section>
+<section id="sec-3-8"  data-background="#422D1D">
+
+<h3>Debug</h3>
+
+<ul class="org-ul">
+<li>Enable pause on exception in Chrome
+</li>
+<li>Supports node debug.
+</li>
+</ul>
+</section>
+</section>
+<section>
+<section id="sec-3-9"  data-background="#422D1D">
+
+<h3>Demo Time</h3>
+
+<ul class="org-ul">
+<li><a href="http://doitian.github.io/javascript-test-demo/test/index.html">Mocha Demo</a>
+</li>
+<li><a href="https://github.com/doitian/javascript-test-demo/blob/gh-pages/test/index.html">HTML Runner</a>
+</li>
+<li><a href="https://github.com/doitian/javascript-test-demo/blob/gh-pages/test/spec/jasmine_test.js">Test File</a>
+</li>
+</ul>
+</section>
+</section>
+<section id="sec-4"  data-background="#2B082C">
+
+<h2>QUnit</h2>
+
+<ul class="org-ul">
+<li>XUnit test framework.
+</li>
+<li>Used by jQuery.
+</li>
+<li>Built-in assert library.
+</li>
+<li>No mocking.
+</li>
+<li>Beautiful website and report.
+</li>
+</ul>
+
+</section>
+<section>
+<section id="sec-4-1"  data-background="#2B082C">
+
+<h3>Test Organization</h3>
+
+<p>
+Cannot nest module.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-coffee">module <span style="color: #cc9393;">'addition'</span>, <span style="color: #f0dfaf;">-&gt;</span>
+test <span style="color: #cc9393;">'1 + 1 = 2'</span>, <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> ...
+module <span style="color: #cc9393;">'binary addition'</span>, <span style="color: #f0dfaf;">-&gt;</span>
+test <span style="color: #cc9393;">'1 + 1 = 10'</span>, <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> ...
+</pre>
+</div>
+</section>
+</section>
+<section>
+<section id="sec-4-2"  data-background="#2B082C">
+
+<h3>Setup and Teardown</h3>
+
+<div class="org-src-container">
+
+<pre class="src src-coffee">module <span style="color: #cc9393;">"module"</span>,
+<span style="background-color: #4f4f4f;"> </span> <span style="color: #dfdfbf; font-weight: bold;">setup:</span> <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> ok <span style="color: #dca3a3; font-weight: bold;">true</span>, <span style="color: #cc9393;">"one extra assert per test"</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="color: #dfdfbf; font-weight: bold;">teardown:</span> <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> ok <span style="color: #dca3a3; font-weight: bold;">true</span>, <span style="color: #cc9393;">"and one extra assert after each test"</span>
+test <span style="color: #cc9393;">"test with setup and teardown"</span>, <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> expect 2
+</pre>
+</div>
+
+<p>
+Calling <code>module()</code> again without setup/teardown will reset them.
+</p>
+</section>
+</section>
+<section>
+<section id="sec-4-3"  data-background="#2B082C">
+
+<h3>Assert</h3>
+
+<div class="org-src-container">
+
+<pre class="src src-coffee">ok <span style="color: #dca3a3; font-weight: bold;">true</span>, <span style="color: #cc9393;">"true succeeds"</span>
+<span style="color: #7f9f7f;"># equal actual, expected, message</span>
+equal 0, 0, <span style="color: #cc9393;">"Zero; equal succeeds"</span>
+notEqual 0, 1
+<span style="color: #f0dfaf;">obj</span> = <span style="color: #dfdfbf; font-weight: bold;">foo:</span> <span style="color: #cc9393;">'bar'</span>
+deepEqual obj, <span style="color: #dfdfbf; font-weight: bold;">foo:</span> <span style="color: #cc9393;">'bar'</span>
+throws((<span style="color: #f0dfaf;">-&gt;</span> <span style="color: #f0dfaf; font-weight: bold;">throw</span> <span style="color: #cc9393;">"error"</span>), <span style="color: #cc9393;">"description"</span>)
+</pre>
+</div>
+</section>
+</section>
+<section>
+<section id="sec-4-4"  data-background="#2B082C">
+
+<h3>Expect</h3>
+
+<p>
+Occasionally, circumstances in your code may prevent callback assertions to
+never be called, causing the test to fail silently.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-coffee"><span style="color: #7f9f7f;"># Or test "a test", 2, -&gt; ...</span>
+test <span style="color: #cc9393;">"a test"</span>, <span style="color: #f0dfaf; font-weight: bold;">function</span>() {
+<span style="background-color: #4f4f4f;"> </span> expect 2
+
+<span style="background-color: #4f4f4f;"> </span> <span style="color: #f0dfaf;">calc</span> = (x, operation) <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> operation x
+
+<span style="background-color: #4f4f4f;"> </span> <span style="color: #f0dfaf;">result</span> = calc 2, (x) <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> ok <span style="color: #dca3a3; font-weight: bold;">true</span>, <span style="color: #cc9393;">"calc() calls operation function"</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> x * x
+
+<span style="background-color: #4f4f4f;"> </span> equal result, 4, <span style="color: #cc9393;">"2 square equals 4"</span>
+</pre>
+</div>
+</section>
+</section>
+<section>
+<section id="sec-4-5"  data-background="#2B082C">
+
+<h3>Async Test</h3>
+
+<ul class="org-ul">
+<li>Call <code>stop()</code> so QUnit will not finish the test after function returns.
+</li>
+<li>Call <code>start()</code> to resume the test executation.
+</li>
+<li><code>asyncTest()</code> auto stop before returns.
+</li>
+</ul>
+</section>
+</section>
+<section>
+<section id="sec-4-6"  data-background="#2B082C">
+
+<h3>Async Test Example</h3>
+
+<div class="org-src-container">
+
+<pre class="src src-coffee"><span style="color: #f0dfaf;">a</span> = b = <span style="color: #dca3a3; font-weight: bold;">null</span>
+module <span style="color: #cc9393;">'Async Test'</span>, <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> setup <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> stop()
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> setTimeout((<span style="color: #f0dfaf;">-&gt;</span> <span style="color: #f0dfaf;">a</span> = b = 1; start()), 500)
+
+asyncTest <span style="color: #cc9393;">'passes'</span>, <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> expect 1
+
+<span style="background-color: #4f4f4f;"> </span> setTimeout((<span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> equal a + b, 2
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> start()
+<span style="background-color: #4f4f4f;"> </span> ), 500)
+</pre>
+</div>
+</section>
+</section>
+<section>
+<section id="sec-4-7"  data-background="#2B082C">
+
+<h3>Browser Report</h3>
+
+<div id="QUnit-Example" class="figure">
+<p><img src="https://www.evernote.com/shard/s2/sh/06d85d62-2923-4089-88db-c4988124c6fb/2039c32e655830d82d93eb48b5bf388d/deep/0/✖ QUnit Example.png"  alt="✖ QUnit Example.png"/></p>
+<p>QUnit Example</p>
+</div>
+</section>
+</section>
+<section>
+<section id="sec-4-8"  data-background="#2B082C">
+
+<h3>Debug</h3>
+
+<ul class="org-ul">
+<li>Enable pause on exception in Chrome
+</li>
+</ul>
+</section>
+</section>
+<section>
+<section id="sec-4-9"  data-background="#2B082C">
+
+<h3>Demo Time</h3>
+
+<ul class="org-ul">
+<li><a href="http://doitian.github.io/javascript-test-demo/test/qunit.html">QUnit Demo</a>
+</li>
+<li><a href="https://github.com/doitian/javascript-test-demo/blob/gh-pages/test/qunit.html">HTML Runner</a>
+</li>
+<li><a href="https://github.com/doitian/javascript-test-demo/blob/gh-pages/test/spec/qunit_test.js">Test File</a>
+</li>
+</ul>
+</section>
+</section>

@@ -1,0 +1,469 @@
+#+Title: Javascript Test Frameworks
+#+Author: Ian Yang
+#+FILETAGS: javascript:test
+
+#+OPTIONS: reveal_center:t reveal_progress:t reveal_history:nil reveal_control:t
+#+OPTIONS: reveal_mathjax:t reveal_rolling_links:t reveal_keyboard:t reveal_overview:t num:nil
+#+OPTIONS: reveal_width:1200 reveal_height:800
+#+OPTIONS: toc:1
+#+REVEAL_MARGIN: 0.1
+#+REVEAL_MIN_SCALE: 0.5
+#+REVEAL_MAX_SCALE: 2.5
+#+REVEAL_TRANS: linear
+#+REVEAL_THEME: default
+#+REVEAL_HLEVEL: 2
+#+REVEAL_PREAMBLE: ox-reveal-jekyll-preamble
+#+EPRESENT_FRAME_LEVEL: 2
+
+* Frameworks
+
+Over *30* different frameworks listed in [[http://en.wikipedia.org/wiki/List_of_unit_testing_frameworks#JavaScript][Wiki]]
+
+** Most Popular
+
+- [[http://pivotal.github.io/jasmine/][Jasmine]]
+- [[http://visionmedia.github.io/mocha/][Mocha]]
+- [[http://qunitjs.com/][QUnit]]
+
+** Comparison
+
+- Test Organization
+- Assert
+- Async Test
+- Browser Report
+- Debug
+
+* Jasmine 2.0
+  :PROPERTIES:
+  :reveal_background: #072933
+  :END:
+
+- A behavior-driven development framework.
+- Built-in assert library
+- Built-in mocking
+
+** Test Organization
+  :PROPERTIES:
+  :reveal_background: #072933
+  :END:
+
+RSpec style
+
+#+BEGIN_SRC coffee
+describe '1 + 1', ->
+  it 'equals to 2', ->
+    ...
+  describe 'using binary', ->
+    it 'equals to 10', ->
+      ...
+#+END_SRC
+
+** Setup and Teardown
+  :PROPERTIES:
+  :reveal_background: #072933
+  :END:
+
+#+BEGIN_SRC coffee
+describe '1 + 1', ->
+  a = nil; b = nil
+
+  # context is shared between hooks and tests
+  before -> # run once before all tests in this suite
+    a = 1; b = 1
+  after -> # run once after all tests in this suite
+  beforeEach ->
+    @result = a + b
+  afterEach ->
+  it 'equals to 2', ->
+    console.log @result
+#+END_SRC
+
+** Assert
+  :PROPERTIES:
+  :reveal_background: #072933
+  :END:
+
+Built-in =expect=, matchers are extensible.
+
+#+BEGIN_SRC coffee
+  expect(1+1).toEqual(2)
+  expect(message).not.toMatch(/Opps/)
+#+END_SRC
+
+** Async Test
+  :PROPERTIES:
+  :reveal_background: #072933
+  :END:
+
+#+BEGIN_SRC coffee
+  describe 'Async Test', ->
+    a = b = null
+  
+    beforeEach (done) ->
+      setTimeout((-> a = b = 1; done()), 500)
+  
+    it 'passes', (done) ->
+      setTimeout((->
+        expect(a + b).toEqual(2)
+        done()
+      ), 500)
+#+END_SRC
+
+** Async Test 1.3 Way
+  :PROPERTIES:
+  :reveal_background: #072933
+  :END:
+
+- Manual test and wait.
+- Split test into =runs= and =waitsFor=.
+- Test fails when =waitsFor= times out.
+
+#+BEGIN_QUOTE
+[[https://github.com/pivotal/jasmine/wiki/Asynchronous-specs][wiki:Asynchronous-specs]]
+#+END_QUOTE
+
+** Async Test 1.3 Example
+  :PROPERTIES:
+  :reveal_background: #072933
+  :END:
+
+#+BEGIN_SRC coffee
+  describe 'Async Test', ->
+    a = b = null
+  
+    beforeEach ->
+      done = false
+      runs ->
+        setTimeout((-> a = b = 1; done = true), 500)
+      waitsFor((-> done), "Should finish", 750)
+  
+    it 'passes' , ->
+      done = false
+      result = null
+      runs ->
+        setTimeout((->
+          result = a + b
+          done = true
+        ), 500)
+      waitsFor((-> done), "Should finish", 750)
+      runs ->
+        expect(result).toEqual(2)
+#+END_SRC
+
+#+REVEAL: split
+
+[[https://www.evernote.com/shard/s2/sh/d0f38ed6-f1e7-4650-bc1c-e4e4d0f92f11/eac84a8dbc49a57f60f737e9458e2b4a/deep/0/failure-disappointed-young-man-looking-at-laptop-small1.png]]
+
+** Browser Report
+  :PROPERTIES:
+  :reveal_background: #072933
+  :END:
+
+#+CAPTION: Jasmine Spec Runner
+#+NAME: Jasmine Spec Runner
+[[https://www.evernote.com/shard/s2/sh/f9ded913-c043-497d-ad97-3c9cb9d6d549/6961d397e72578d7e26a40d48e50c174/deep/0/Jasmine%20Spec%20Runner.png]]
+
+** Detailed Error Message
+  :PROPERTIES:
+  :reveal_background: #072933
+  :END:
+
+#+CAPTION: Jasmine Spec Runner Error Message
+#+NAME: Jasmine Spec Runner Error Message
+[[https://www.evernote.com/shard/s2/sh/23fef4bf-3fe3-43f5-84f6-4c371844b083/da742eb8090949b228ac783dc26537df/deep/0/Jasmine%20Spec%20Runner%20Error%20Message.png]]
+
+** Debug
+  :PROPERTIES:
+  :reveal_background: #072933
+  :END:
+
+- Enable pause on exceptions in Chrome Console.
+- 1.3 does not throw exception,
+  - Set break points manually.
+
+** Chrome Debug on Exception
+  :PROPERTIES:
+  :reveal_background: #072933
+  :END:
+
+#+CAPTION: Chrome Debugger
+#+NAME: Chrome Debugger
+[[https://www.evernote.com/shard/s2/sh/5ea73206-c860-43d0-b318-df1b28e95434/4f9de684fc483ff6d777fd8ffd46032f/deep/0/Chrome%20Pause%20on%20Exceptions.png]]
+
+
+** Demo Time
+  :PROPERTIES:
+  :reveal_background: #072933
+  :END:
+
+- [[http://doitian.github.io/javascript-test-demo/test/jasmine.html][Jasmine Demo]]
+- [[https://github.com/doitian/javascript-test-demo/blob/gh-pages/test/jasmine.html][HTML Runner]]
+- [[https://github.com/doitian/javascript-test-demo/blob/gh-pages/test/spec/jasmine_test.js][Test File]]
+
+* Mocha
+  :PROPERTIES:
+  :reveal_background: #422D1D
+  :END:
+
+- Configurable interface: *tdd*, *bdd*, *export*.
+- Integrate [[http://chaijs.com/][chai]], [[http://github.com/visionmedia/should.js][should.js]], [[https://github.com/LearnBoost/expect.js][expect.js]] or [[https://github.com/visionmedia/better-assert][better-assert]] as assert library.
+- No mocking.
+- Easy to use async test.
+
+** Test Organization: TDD
+  :PROPERTIES:
+  :reveal_background: #422D1D
+  :END:
+
+#+BEGIN_SRC coffee
+suite 'Array', ->
+  setup -> # ...
+  suite '#indexOf()', ->
+    test 'should return -1 when not present', ->
+      assert.equal(-1, [1,2,3].indexOf(4))
+#+END_SRC
+
+** Test Organization: BDD
+  :PROPERTIES:
+  :reveal_background: #422D1D
+  :END:
+
+#+BEGIN_SRC coffee
+describe 'Array', ->
+  before -> # ...
+
+  describe '#indexOf()', ->
+    it 'should return -1 when not present', ->
+      [1,2,3].indexOf(4).should.equal(-1)
+#+END_SRC
+
+** Assert: Chai Assert
+  :PROPERTIES:
+  :reveal_background: #422D1D
+  :END:
+
+#+BEGIN_SRC coffee
+assert = require('chai').assert
+foo = 'bar'
+beverages = { tea: [ 'chai', 'matcha', 'oolong' ] }
+
+assert.typeOf(foo, 'string', 'foo is a string')
+assert.equal(foo, 'bar', 'foo equal `bar`')
+assert.lengthOf(foo, 3, 'foo`s value has a length of 3')
+assert.lengthOf(beverages.tea, 3, 'beverages has 3 types of tea')
+#+END_SRC
+
+** Assert: Chai Expect
+  :PROPERTIES:
+  :reveal_background: #422D1D
+  :END:
+
+#+BEGIN_SRC coffee
+var expect = require('chai').expect
+foo = 'bar'
+beverages = { tea: [ 'chai', 'matcha', 'oolong' ] }
+
+expect(foo).to.be.a('string')
+expect(foo).to.equal('bar')
+expect(foo).to.have.length(3)
+expect(beverages).to.have.property('tea').with.length(3)
+#+END_SRC
+
+** Assert: Chai Should
+  :PROPERTIES:
+  :reveal_background: #422D1D
+  :END:
+
+#+BEGIN_SRC coffee
+should = require('chai').should() # actually call the the function
+foo = 'bar'
+beverages = { tea: [ 'chai', 'matcha', 'oolong' ] }
+
+foo.should.be.a('string')
+foo.should.equal('bar')
+foo.should.have.length(3)
+beverages.should.have.property('tea').with.length(3)
+#+END_SRC
+
+** Async Test
+  :PROPERTIES:
+  :reveal_background: #422D1D
+  :END:
+
+#+BEGIN_SRC coffee
+  describe 'Async Test', ->
+    a = b = null
+  
+    beforeEach (done) ->
+      setTimeout((-> a = b = 1; done()), 500)
+  
+    it 'passes' , (done) ->
+      setTimeout((->
+        expect(a + b).toEqual(2)
+        done()
+      ), 500)
+#+END_SRC
+
+Looks familiar?
+
+** Browser Report
+  :PROPERTIES:
+  :reveal_background: #422D1D
+  :END:
+
+#+CAPTION: Mocha HTML Reporter
+#+NAME: Mocha Spec Runner
+[[https://www.evernote.com/shard/s2/sh/14117419-075b-4894-92c2-2559f16acd39/939afc12eda5159f58675d7a15809be8/deep/0/Mocha%20Spec%20Runner.png]]
+
+** Debug
+  :PROPERTIES:
+  :reveal_background: #422D1D
+  :END:
+
+- Enable pause on exception in Chrome
+- Supports node debug.
+
+** Demo Time
+  :PROPERTIES:
+  :reveal_background: #422D1D
+  :END:
+
+- [[http://doitian.github.io/javascript-test-demo/test/index.html][Mocha Demo]]
+- [[https://github.com/doitian/javascript-test-demo/blob/gh-pages/test/index.html][HTML Runner]]
+- [[https://github.com/doitian/javascript-test-demo/blob/gh-pages/test/spec/jasmine_test.js][Test File]]
+
+* QUnit
+  :PROPERTIES:
+  :reveal_background: #2B082C
+  :END:
+
+- XUnit test framework.
+- Used by jQuery.
+- Built-in assert library.
+- No mocking.
+- Beautiful website and report.
+
+** Test Organization
+  :PROPERTIES:
+  :reveal_background: #2B082C
+  :END:
+
+Cannot nest module.
+
+#+BEGIN_SRC coffee
+module 'addition', ->
+test '1 + 1 = 2', ->
+  ...
+module 'binary addition', ->
+test '1 + 1 = 10', ->
+  ...
+#+END_SRC
+
+** Setup and Teardown
+  :PROPERTIES:
+  :reveal_background: #2B082C
+  :END:
+
+#+BEGIN_SRC coffee
+  module "module",
+    setup: ->
+      ok true, "one extra assert per test"
+    teardown: ->
+      ok true, "and one extra assert after each test"
+  test "test with setup and teardown", ->
+    expect 2
+#+END_SRC
+
+Calling =module()= again without setup/teardown will reset them.
+
+** Assert
+  :PROPERTIES:
+  :reveal_background: #2B082C
+  :END:
+
+#+BEGIN_SRC coffee
+  ok true, "true succeeds"
+  # equal actual, expected, message
+  equal 0, 0, "Zero; equal succeeds"
+  notEqual 0, 1
+  obj = foo: 'bar'
+  deepEqual obj, foo: 'bar'
+  throws((-> throw "error"), "description")
+#+END_SRC
+
+** Expect
+  :PROPERTIES:
+  :reveal_background: #2B082C
+  :END:
+
+Occasionally, circumstances in your code may prevent callback assertions to
+never be called, causing the test to fail silently.
+
+#+BEGIN_SRC coffee
+  # Or test "a test", 2, -> ...
+  test "a test", function() {
+    expect 2
+  
+    calc = (x, operation) ->
+      operation x
+  
+    result = calc 2, (x) ->
+      ok true, "calc() calls operation function"
+      x * x
+  
+    equal result, 4, "2 square equals 4"
+#+END_SRC
+
+** Async Test
+  :PROPERTIES:
+  :reveal_background: #2B082C
+  :END:
+
+- Call =stop()= so QUnit will not finish the test after function returns.
+- Call =start()= to resume the test executation.
+- =asyncTest()= auto stop before returns.
+
+** Async Test Example
+  :PROPERTIES:
+  :reveal_background: #2B082C
+  :END:
+
+#+BEGIN_SRC coffee
+  a = b = null
+  module 'Async Test', ->
+    setup ->
+      stop()
+      setTimeout((-> a = b = 1; start()), 500)
+  
+  asyncTest 'passes', ->
+    expect 1
+  
+    setTimeout((->
+      equal a + b, 2
+      start()
+    ), 500)
+#+END_SRC
+
+** Browser Report
+  :PROPERTIES:
+  :reveal_background: #2B082C
+  :END:
+#+CAPTION: QUnit Example
+#+Name: QUnit Example
+[[https://www.evernote.com/shard/s2/sh/06d85d62-2923-4089-88db-c4988124c6fb/2039c32e655830d82d93eb48b5bf388d/deep/0/%E2%9C%96%20QUnit%20Example.png]]
+
+** Debug
+  :PROPERTIES:
+  :reveal_background: #2B082C
+  :END:
+
+- Enable pause on exception in Chrome
+
+** Demo Time
+  :PROPERTIES:
+  :reveal_background: #2B082C
+  :END:
+
+- [[http://doitian.github.io/javascript-test-demo/test/qunit.html][QUnit Demo]]
+- [[https://github.com/doitian/javascript-test-demo/blob/gh-pages/test/qunit.html][HTML Runner]]
+- [[https://github.com/doitian/javascript-test-demo/blob/gh-pages/test/spec/qunit_test.js][Test File]]
