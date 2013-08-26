@@ -473,3 +473,9 @@ never be called, causing the test to fail silently.
 - *Mocha*: flexible, extensible.
 - *QUnit*: simple, just works.
 - *Jasmine*: Heavy, debug and async test is painful in 1.3.
+
+** Next
+
+- Test Runners
+- [[https://github.com/airportyh/testem][Test'em]]
+- [[http://karma-runner.github.io/0.10/index.html][Karma]]
