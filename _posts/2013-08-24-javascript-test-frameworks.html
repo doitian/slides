@@ -496,10 +496,10 @@ Cannot nest module.
 
 <div class="org-src-container">
 
-<pre class="src src-coffee">module <span style="color: #cc9393;">'addition'</span>, <span style="color: #f0dfaf;">-&gt;</span>
+<pre class="src src-coffee">module <span style="color: #cc9393;">'addition'</span>
 test <span style="color: #cc9393;">'1 + 1 = 2'</span>, <span style="color: #f0dfaf;">-&gt;</span>
 <span style="background-color: #4f4f4f;"> </span> ...
-module <span style="color: #cc9393;">'binary addition'</span>, <span style="color: #f0dfaf;">-&gt;</span>
+module <span style="color: #cc9393;">'binary addition'</span>
 test <span style="color: #cc9393;">'1 + 1 = 10'</span>, <span style="color: #f0dfaf;">-&gt;</span>
 <span style="background-color: #4f4f4f;"> </span> ...
 </pre>
@@ -559,7 +559,7 @@ never be called, causing the test to fail silently.
 <div class="org-src-container">
 
 <pre class="src src-coffee"><span style="color: #7f9f7f;"># Or test "a test", 2, -&gt; ...</span>
-test <span style="color: #cc9393;">"a test"</span>, <span style="color: #f0dfaf; font-weight: bold;">function</span>() {
+test <span style="color: #cc9393;">"a test"</span>, <span style="color: #f0dfaf;">-&gt;</span>
 <span style="background-color: #4f4f4f;"> </span> expect 2
 
 <span style="background-color: #4f4f4f;"> </span> <span style="color: #f0dfaf;">calc</span> = (x, operation) <span style="color: #f0dfaf;">-&gt;</span>

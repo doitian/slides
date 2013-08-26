@@ -351,10 +351,10 @@ Looks familiar?
 Cannot nest module.
 
 #+BEGIN_SRC coffee
-module 'addition', ->
+module 'addition'
 test '1 + 1 = 2', ->
   ...
-module 'binary addition', ->
+module 'binary addition'
 test '1 + 1 = 10', ->
   ...
 #+END_SRC
@@ -401,7 +401,7 @@ never be called, causing the test to fail silently.
 
 #+BEGIN_SRC coffee
   # Or test "a test", 2, -> ...
-  test "a test", function() {
+  test "a test", ->
     expect 2
   
     calc = (x, operation) ->
