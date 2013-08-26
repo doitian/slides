@@ -467,3 +467,9 @@ never be called, causing the test to fail silently.
 - [[http://doitian.github.io/javascript-test-demo/test/qunit.html][QUnit Demo]]
 - [[https://github.com/doitian/javascript-test-demo/blob/gh-pages/test/qunit.html][HTML Runner]]
 - [[https://github.com/doitian/javascript-test-demo/blob/gh-pages/test/spec/qunit_test.js][Test File]]
+
+* Conclusion
+
+- *Mocha*: flexible, extensible.
+- *QUnit*: simple, just works.
+- *Jasmine*: Heavy, debug and async test is painful in 1.3.
