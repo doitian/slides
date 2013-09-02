@@ -1,0 +1,188 @@
+#+Title: Javascript Test Runners
+#+Author: Ian Yang
+#+FILETAGS: javascript:test
+
+#+OPTIONS: reveal_center:t reveal_progress:t reveal_history:nil reveal_control:t
+#+OPTIONS: reveal_mathjax:t reveal_rolling_links:t reveal_keyboard:t reveal_overview:t num:nil
+#+OPTIONS: reveal_width:1200 reveal_height:800
+#+OPTIONS: toc:1
+#+REVEAL_MARGIN: 0.1
+#+REVEAL_MIN_SCALE: 0.5
+#+REVEAL_MAX_SCALE: 2.5
+#+REVEAL_TRANS: linear
+#+REVEAL_THEME: default
+#+REVEAL_HLEVEL: 2
+#+REVEAL_PREAMBLE: ox-reveal-jekyll-preamble
+#+EPRESENT_FRAME_LEVEL: 2
+
+* What is Test Runner
+
+Tools to ease running JavaScript test.
+
+** Features
+
+- Test driven development
+- Multiple browsers
+- Easy debugging
+- CI
+
+** Test driven development
+
+- Terminal focused
+- Command line report
+- Auto run tests on file changes
+
+** Why
+
+- Do one thing and do it well
+
+* Test'em
+
+https://github.com/airportyh/testem
+
+#+BEGIN_EXAMPLE
+  npm install -g testem
+  testem
+#+END_EXAMPLE
+
+** Configuration
+
+testem.json
+
+#+BEGIN_SRC javascript
+{
+  "framework": "mocha",
+  "src_files": [
+    "test/lib/chai.js",
+    "test/mocha_setup.js",
+    "test/spec/mocha_test.js"
+  ]
+}
+#+END_SRC
+
+** CI
+
+Run tests on all available browsers on the system.
+
+#+BEGIN_EXAMPLE
+testem launchers # see list of all available browsers
+testem ci
+#+END_EXAMPLE
+
+** Coffee
+
+testem.json
+#+BEGIN_SRC javascript
+{
+  "framework": "jasmine",
+  "before_tests": "coffee -c *.coffee",
+  "src_files": [
+    // Still list js files not coffee files here.
+    "test/spec/jasmine_test.js"
+  ]
+}
+#+END_SRC
+
+** Extension
+
+- [[https://github.com/airportyh/testem#custom-test-pages][Custom test page]]
+- [[https://github.com/airportyh/testem#diy-use-any-test-framework][Framework adapter]]
+- [[https://github.com/airportyh/testem#running-tests-in-node-and-custom-process-launchers][Command line launcher]] (run test using node)
+
+** Demo Time
+
+[[https://github.com/doitian/javascript-test-demo/blob/gh-pages/testem.json][doitian/javascript-test-demo/testem.json]]
+
+* Karma
+
+http://karma-runner.github.io/
+
+#+BEGIN_EXAMPLE
+npm install -g karma karma-mocha
+karma init
+karma start
+#+END_EXAMPLE
+
+** Configuration
+
+#+BEGIN_SRC javascript
+module.exports = function(config) {
+  config.set({
+    basePath: '',
+    frameworks: ['mocha'],
+    files: [
+      'test/lib/chai.js',
+      'test/mocha_setup.js',
+      'test/spec/mocha_test.js'
+    ],
+    autoWatch: true,
+    browsers: ['Chrome'],
+    ...
+  });
+};
+#+END_SRC
+
+#+BEGIN_QUOTE
+[[http://karma-runner.github.io/0.10/config/configuration-file.html][Configuration File]]
+#+END_QUOTE
+
+** CI
+
+#+BEGIN_SRC javascript
+singleRun: true,
+reporters: ['dots', 'junit'],
+junitReporter: {
+  outputFile: 'test-results.xml'
+},
+#+END_SRC
+
+And run tests using PhantomJS
+
+#+BEGIN_EXAMPLE
+$ PATH=/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/bin
+$ PHANTOMJS_BIN=/usr/local/bin/phantomjs 
+#+END_EXAMPLE
+
+** Coffee
+
+karma.conf.js
+
+#+BEGIN_SRC javascript
+preprocessors: {
+  '**/*.coffee': ['coffee'],
+  '**/*.html': ['html2js']
+},
+#+END_SRC
+
+** Extension
+
+- [[http://karma-runner.github.io/0.10/config/browsers.html][Custom browser]]
+- [[http://karma-runner.github.io/0.10/config/plugins.html][Karma plugins]]
+
+** Demo Time
+
+[[https://github.com/doitian/javascript-test-demo/blob/gh-pages/karma.conf.js][doitian/javascript-test-demo/karma.conf.js]]
+
+* Sprockets Integration
+
+- Runners do not know sprockets directives.
+- Assets are bundled in gems.
+
+** Solution A: List files manually
+
+- Include files in =app/assets/javascripts=
+- Put vendor JavaScript assets in =vendor/assets/javascripts=
+- Or =bundle --path vendor/bundle= and add paths to gem assets in runner
+  config.
+
+** Solution B: Export bundled assets
+
+- See sample using Guard in this [[https://gist.github.com/doitian/2357356][gist]].
+- Only need to export source JavaScript
+
+#+BEGIN_SRC ruby
+env = SprocketsEnvironmentBuilder.build(:development)
+asset = env.find_asset('application.js')
+asset.write_to('spec/javascripts/application.js')
+#+END_SRC
+

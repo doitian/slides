@@ -1,0 +1,322 @@
+---
+layout: presentation
+title: Javascript Test Runners
+tag: [javascript, test]
+description: 
+---
+<section>
+<h1>Javascript Test Runners</h1>
+<h2>Ian Yang</h2>
+<h2><a href="mailto:me@iany.me">me@iany.me</a></h2>
+<h2></h2></section>
+<section>
+<h2>Table of Contents</h2><ul>
+<li>
+<a href="#sec-1">What is Test Runner</a>
+</li>
+<li>
+<a href="#sec-2">Test'em</a>
+</li>
+<li>
+<a href="#sec-3">Karma</a>
+</li>
+<li>
+<a href="#sec-4">Sprockets Integration</a>
+</li>
+</ul>
+</section>
+
+<section id="sec-1" >
+
+<h2>What is Test Runner</h2>
+<p>
+Tools to ease running JavaScript test.
+</p>
+
+</section>
+<section>
+<section id="sec-1-1" >
+
+<h3>Features</h3>
+<ul class="org-ul">
+<li>Test driven development
+</li>
+<li>Multiple browsers
+</li>
+<li>Easy debugging
+</li>
+<li>CI
+</li>
+</ul>
+</section>
+</section>
+<section>
+<section id="sec-1-2" >
+
+<h3>Test driven development</h3>
+<ul class="org-ul">
+<li>Terminal focused
+</li>
+<li>Command line report
+</li>
+<li>Auto run tests on file changes
+</li>
+</ul>
+</section>
+</section>
+<section>
+<section id="sec-1-3" >
+
+<h3>Why</h3>
+<ul class="org-ul">
+<li>Do one thing and do it well
+</li>
+</ul>
+</section>
+</section>
+<section id="sec-2" >
+
+<h2>Test'em</h2>
+<p>
+<a href="https://github.com/airportyh/testem">https://github.com/airportyh/testem</a>
+</p>
+
+<pre class="example">
+npm install -g testem
+testem
+</pre>
+
+</section>
+<section>
+<section id="sec-2-1" >
+
+<h3>Configuration</h3>
+<p>
+testem.json
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-javascript">{
+  <span style="color: #cc9393;">"framework"</span>: <span style="color: #cc9393;">"mocha"</span>,
+  <span style="color: #cc9393;">"src_files"</span>: [
+    <span style="color: #cc9393;">"test/lib/chai.js"</span>,
+    <span style="color: #cc9393;">"test/mocha_setup.js"</span>,
+    <span style="color: #cc9393;">"test/spec/mocha_test.js"</span>
+  ]
+}
+</pre>
+</div>
+</section>
+</section>
+<section>
+<section id="sec-2-2" >
+
+<h3>CI</h3>
+<p>
+Run tests on all available browsers on the system.
+</p>
+
+<pre class="example">
+testem launchers # see list of all available browsers
+testem ci
+</pre>
+</section>
+</section>
+<section>
+<section id="sec-2-3" >
+
+<h3>Coffee</h3>
+<p>
+testem.json
+</p>
+<div class="org-src-container">
+
+<pre class="src src-javascript">{
+  <span style="color: #cc9393;">"framework"</span>: <span style="color: #cc9393;">"jasmine"</span>,
+  <span style="color: #cc9393;">"before_tests"</span>: <span style="color: #cc9393;">"coffee -c *.coffee"</span>,
+  <span style="color: #cc9393;">"src_files"</span>: [
+    <span style="color: #708070;">// </span><span style="color: #7f9f7f;">Still list js files not coffee files here.</span>
+    <span style="color: #cc9393;">"test/spec/jasmine_test.js"</span>
+  ]
+}
+</pre>
+</div>
+</section>
+</section>
+<section>
+<section id="sec-2-4" >
+
+<h3>Extension</h3>
+<ul class="org-ul">
+<li><a href="https://github.com/airportyh/testem#custom-test-pages">Custom test page</a>
+</li>
+<li><a href="https://github.com/airportyh/testem#diy-use-any-test-framework">Framework adapter</a>
+</li>
+<li><a href="https://github.com/airportyh/testem#running-tests-in-node-and-custom-process-launchers">Command line launcher</a> (run test using node)
+</li>
+</ul>
+</section>
+</section>
+<section>
+<section id="sec-2-5" >
+
+<h3>Demo Time</h3>
+<p>
+<a href="https://github.com/doitian/javascript-test-demo/blob/gh-pages/testem.json">doitian/javascript-test-demo/testem.json</a>
+</p>
+</section>
+</section>
+<section id="sec-3" >
+
+<h2>Karma</h2>
+<p>
+<a href="http://karma-runner.github.io/">http://karma-runner.github.io/</a>
+</p>
+
+<pre class="example">
+npm install -g karma karma-mocha
+karma init
+karma start
+</pre>
+
+</section>
+<section>
+<section id="sec-3-1" >
+
+<h3>Configuration</h3>
+<div class="org-src-container">
+
+<pre class="src src-javascript">module.exports = <span style="color: #f0dfaf; font-weight: bold;">function</span>(<span style="color: #f0dfaf;">config</span>) {
+  config.set({
+    basePath: <span style="color: #cc9393;">''</span>,
+    frameworks: [<span style="color: #cc9393;">'mocha'</span>],
+    files: [
+      <span style="color: #cc9393;">'test/lib/chai.js'</span>,
+      <span style="color: #cc9393;">'test/mocha_setup.js'</span>,
+      <span style="color: #cc9393;">'test/spec/mocha_test.js'</span>
+    ],
+    autoWatch: <span style="color: #dca3a3; font-weight: bold;">true</span>,
+    browsers: [<span style="color: #cc9393;">'Chrome'</span>],
+    ...
+  });
+};
+</pre>
+</div>
+
+<blockquote>
+<p>
+<a href="http://karma-runner.github.io/0.10/config/configuration-file.html">Configuration File</a>
+</p>
+</blockquote>
+</section>
+</section>
+<section>
+<section id="sec-3-2" >
+
+<h3>CI</h3>
+<div class="org-src-container">
+
+<pre class="src src-javascript">singleRun: <span style="color: #dca3a3; font-weight: bold;">true</span>,
+reporters: [<span style="color: #cc9393;">'dots'</span>, <span style="color: #cc9393;">'junit'</span>],
+junitReporter: {
+  outputFile: <span style="color: #cc9393;">'test-results.xml'</span>
+},
+</pre>
+</div>
+
+<p>
+And run tests using PhantomJS
+</p>
+
+<pre class="example">
+$ PATH=/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/bin
+$ PHANTOMJS_BIN=/usr/local/bin/phantomjs
+</pre>
+</section>
+</section>
+<section>
+<section id="sec-3-3" >
+
+<h3>Coffee</h3>
+<p>
+karma.conf.js
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-javascript">preprocessors: {
+  <span style="color: #cc9393;">'**/*.coffee'</span>: [<span style="color: #cc9393;">'coffee'</span>],
+  <span style="color: #cc9393;">'**/*.html'</span>: [<span style="color: #cc9393;">'html2js'</span>]
+},
+</pre>
+</div>
+</section>
+</section>
+<section>
+<section id="sec-3-4" >
+
+<h3>Extension</h3>
+<ul class="org-ul">
+<li><a href="http://karma-runner.github.io/0.10/config/browsers.html">Custom browser</a>
+</li>
+<li><a href="http://karma-runner.github.io/0.10/config/plugins.html">Karma plugins</a>
+</li>
+</ul>
+</section>
+</section>
+<section>
+<section id="sec-3-5" >
+
+<h3>Demo Time</h3>
+<p>
+<a href="https://github.com/doitian/javascript-test-demo/blob/gh-pages/karma.conf.js">doitian/javascript-test-demo/karma.conf.js</a>
+</p>
+</section>
+</section>
+<section id="sec-4" >
+
+<h2>Sprockets Integration</h2>
+<ul class="org-ul">
+<li>Runners do not know sprockets directives.
+</li>
+<li>Assets are bundled in gems.
+</li>
+</ul>
+
+</section>
+<section>
+<section id="sec-4-1" >
+
+<h3>Solution A: List files manually</h3>
+<ul class="org-ul">
+<li>Include files in <code>app/assets/javascripts</code>
+</li>
+<li>Put vendor JavaScript assets in <code>vendor/assets/javascripts</code>
+</li>
+<li>Or <code>bundle &#x2013;path vendor/bundle</code> and add paths to gem assets in runner
+config.
+</li>
+</ul>
+</section>
+</section>
+<section>
+<section id="sec-4-2" >
+
+<h3>Solution B: Export bundled assets</h3>
+<ul class="org-ul">
+<li>See sample using Guard in this <a href="https://gist.github.com/doitian/2357356">gist</a>.
+</li>
+<li>Only need to export source JavaScript
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-ruby">env = <span style="color: #dfdfbf; font-weight: bold;">SprocketsEnvironmentBuilder</span>.build(<span style="color: #dca3a3; font-weight: bold;">:development</span>)
+asset = env.find_asset(<span style="color: #cc9393;">'application.js'</span>)
+asset.write_to(<span style="color: #cc9393;">'spec/javascripts/application.js'</span>)
+</pre>
+</div>
+</section>
+</section>
