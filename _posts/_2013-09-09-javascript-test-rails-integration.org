@@ -115,6 +115,9 @@ RAILS_ENV=test bundle exec rake spec:javascript
 - CI through =phantomjs=
 
 ** Installation
+  :PROPERTIES:
+  :reveal_background: #422D1D
+  :END:
 
 #+BEGIN_SRC ruby
 group :test, :development do
@@ -125,6 +128,9 @@ end
 #+END_SRC
 
 ** Start Sever
+  :PROPERTIES:
+  :reveal_background: #422D1D
+  :END:
 
 #+BEGIN_SRC sh
 bundle exec rake konacha:serve
@@ -133,6 +139,9 @@ bundle exec rake konacha:serve
 > http://localhost:3500
 
 ** Configuration
+  :PROPERTIES:
+  :reveal_background: #422D1D
+  :END:
 
 =config/initializers/konacha.rb=
 
@@ -146,19 +155,31 @@ end if defined?(Konacha)
 #+END_SRC
 
 ** Spec Helper 
+  :PROPERTIES:
+  :reveal_background: #422D1D
+  :END:
 
 - Require helper files using sprockets directives.
 
 ** TDD
+  :PROPERTIES:
+  :reveal_background: #422D1D
+  :END:
 
 - Livereload
 - =guard-konacha=
 
 ** Asset Pipeline
+  :PROPERTIES:
+  :reveal_background: #422D1D
+  :END:
 
 The Same with =jasmine-rails=
 
 ** CI
+  :PROPERTIES:
+  :reveal_background: #422D1D
+  :END:
 
 #+BEGIN_SRC ruby
   # gem 'poltergeist'
