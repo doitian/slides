@@ -26,7 +26,7 @@
   :reveal_background: #072933
   :END:
 
-> [[https://github.com/airportyh/testem][airportyh/testem]]
+> [[https://github.com/searls/jasmine-rails][searls/jasmine-rails]]
 
 - Early Rails 4 support
 - CI through phantomjs
