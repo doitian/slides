@@ -1,0 +1,396 @@
+---
+layout: presentation
+title: Javascript Test Rails Integration
+tag: [javascript, test, rails]
+description: 
+---
+<section>
+<h1>Javascript Test Rails Integration</h1>
+<h2>Ian Yang</h2>
+<h2><a href="mailto:me@iany.me">me@iany.me</a></h2>
+<h2></h2></section>
+<section>
+<h2>Table of Contents</h2><ul>
+<li>
+<a href="#sec-1">Rails Integration</a>
+</li>
+<li>
+<a href="#sec-2">Jasmine</a>
+</li>
+<li>
+<a href="#sec-3">Mocha</a>
+</li>
+<li>
+<a href="#sec-4">Tips/Discussion</a>
+</li>
+</ul>
+</section>
+
+<section id="sec-1" >
+
+<h2>Rails Integration</h2>
+<ul class="org-ul">
+<li>Asset Pipeline Support
+</li>
+<li>Ease test driven development
+</li>
+<li>CI
+</li>
+</ul>
+</section>
+<section id="sec-2"  data-background="#072933">
+
+<h2>Jasmine</h2>
+
+<p>
+&gt; <a href="https://github.com/airportyh/testem">airportyh/testem</a>
+</p>
+
+<ul class="org-ul">
+<li>Early Rails 4 support
+</li>
+<li>CI through phantomjs
+</li>
+</ul>
+
+</section>
+<section>
+<section id="sec-2-1"  data-background="#072933">
+
+<h3>Installation</h3>
+
+<div class="org-src-container">
+
+<pre class="src src-ruby">group <span style="color: #dca3a3; font-weight: bold;">:test</span>, <span style="color: #dca3a3; font-weight: bold;">:development</span> <span style="color: #f0dfaf; font-weight: bold;">do</span>
+  gem <span style="color: #cc9393;">'jasmine-rails'</span>
+<span style="color: #f0dfaf; font-weight: bold;">end</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-ruby">mount <span style="color: #dfdfbf; font-weight: bold;">JasmineRails</span>::<span style="color: #dfdfbf; font-weight: bold;">Engine</span> =&gt; <span style="color: #cc9393;">"/specs"</span> <span style="color: #f0dfaf; font-weight: bold;">if</span> <span style="color: #f0dfaf; font-weight: bold;">defined?</span>(<span style="color: #dfdfbf; font-weight: bold;">JasmineRails</span>)
+</pre>
+</div>
+</section>
+</section>
+<section>
+<section id="sec-2-2"  data-background="#072933">
+
+<h3>Configuration</h3>
+
+<p>
+<code>spec/javascripts/support/jasmine.yml</code>
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-yaml"><span style="color: #f0dfaf;">src_dir</span>: <span style="color: #cc9393;">"app/assets/javascripts"</span>
+<span style="color: #f0dfaf;">src_files</span>:
+ - <span style="color: #cc9393;">"application.{js,coffee}"</span>
+<span style="color: #f0dfaf;">spec_dir</span>: spec/javascripts
+<span style="color: #f0dfaf;">helpers</span>:
+  - <span style="color: #cc9393;">"helpers/**/*.{js,coffee}"</span>
+<span style="color: #f0dfaf;">spec_files</span>:
+  - <span style="color: #cc9393;">"**/*[Ss]pec.{js,coffee}"</span>
+</pre>
+</div>
+</section>
+</section>
+<section>
+<section id="sec-2-3" >
+
+<h3>Spec helper</h3>
+<ul class="org-ul">
+<li>Configure <code>helpers</code> in config file,
+</li>
+<li>or require helper files using sprockets directives.
+</li>
+</ul>
+</section>
+</section>
+<section>
+<section id="sec-2-4"  data-background="#072933">
+
+<h3>TDD</h3>
+
+<ul class="org-ul">
+<li>Livereload
+<ul class="org-ul">
+<li>Use <code>guard-livereload</code> and livereload browser esxtenion,
+</li>
+<li>or use livereload app.
+</li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section>
+<section id="sec-2-5"  data-background="#072933">
+
+<h3>Asset Pipeline</h3>
+
+<ul class="org-ul">
+<li>use <code>coffee_script</code> or other Javascript precompilers for source or test files
+</li>
+<li>use sprockets directives to control inclusion/exclusion of dependent files
+</li>
+<li>leverage asset pipeline search paths to include assets from various sources/gems
+</li>
+</ul>
+</section>
+</section>
+<section>
+<section id="sec-2-6"  data-background="#072933">
+
+<h3>CI</h3>
+
+<div class="org-src-container">
+
+<pre class="src src-sh"><span style="color: #f0dfaf;">RAILS_ENV</span>=test bundle exec rake spec:javascript
+</pre>
+</div>
+</section>
+</section>
+<section>
+<section id="sec-2-7"  data-background="#072933">
+
+<h3>Demo Time</h3>
+
+</section>
+</section>
+<section id="sec-3"  data-background="#422D1D">
+
+<h2>Mocha</h2>
+
+<p>
+&gt; <a href="https://github.com/jfirebaugh/konacha">jfirebaugh/konacha</a>
+</p>
+
+<ul class="org-ul">
+<li>Each test file in its own IFRAME
+<ul class="org-ul">
+<li>HTML sandbox
+</li>
+<li>Isolation
+</li>
+<li>Hard to debug (use <code>debugger</code>)
+</li>
+</ul>
+</li>
+<li>CI through <code>phantomjs</code>
+</li>
+</ul>
+
+</section>
+<section>
+<section id="sec-3-1" >
+
+<h3>Installation</h3>
+<div class="org-src-container">
+
+<pre class="src src-ruby">group <span style="color: #dca3a3; font-weight: bold;">:test</span>, <span style="color: #dca3a3; font-weight: bold;">:development</span> <span style="color: #f0dfaf; font-weight: bold;">do</span>
+  gem <span style="color: #cc9393;">'konacha'</span>
+  gem <span style="color: #cc9393;">'selenium-webdriver'</span>
+  <span style="color: #708070;"># </span><span style="color: #7f9f7f;">gem 'poltergeist'</span>
+<span style="color: #f0dfaf; font-weight: bold;">end</span>
+</pre>
+</div>
+</section>
+</section>
+<section>
+<section id="sec-3-2" >
+
+<h3>Start Sever</h3>
+<div class="org-src-container">
+
+<pre class="src src-sh">bundle exec rake konacha:serve
+</pre>
+</div>
+
+<p>
+&gt; <a href="http://localhost:3500">http://localhost:3500</a>
+</p>
+</section>
+</section>
+<section>
+<section id="sec-3-3" >
+
+<h3>Configuration</h3>
+<p>
+<code>config/initializers/konacha.rb</code>
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ruby"><span style="color: #dfdfbf; font-weight: bold;">Konacha</span>.configure <span style="color: #f0dfaf; font-weight: bold;">do</span> |config|
+  config.spec_dir     = <span style="color: #cc9393;">"spec/javascripts"</span>
+  config.spec_matcher = <span style="color: #cc9393;">/_spec\.|_test\./</span>
+  config.stylesheets  = <span style="color: #cc9393;">%w(application)</span>
+  config.driver       = <span style="color: #dca3a3; font-weight: bold;">:selenium</span>
+<span style="color: #f0dfaf; font-weight: bold;">end</span> <span style="color: #f0dfaf; font-weight: bold;">if</span> <span style="color: #f0dfaf; font-weight: bold;">defined?</span>(<span style="color: #dfdfbf; font-weight: bold;">Konacha</span>)
+</pre>
+</div>
+</section>
+</section>
+<section>
+<section id="sec-3-4" >
+
+<h3>Spec Helper</h3>
+<ul class="org-ul">
+<li>Require helper files using sprockets directives.
+</li>
+</ul>
+</section>
+</section>
+<section>
+<section id="sec-3-5" >
+
+<h3>TDD</h3>
+<ul class="org-ul">
+<li>Livereload
+</li>
+<li><code>guard-konacha</code>
+</li>
+</ul>
+</section>
+</section>
+<section>
+<section id="sec-3-6" >
+
+<h3>Asset Pipeline</h3>
+<p>
+The Same with <code>jasmine-rails</code>
+</p>
+</section>
+</section>
+<section>
+<section id="sec-3-7" >
+
+<h3>CI</h3>
+<div class="org-src-container">
+
+<pre class="src src-ruby"><span style="color: #708070;"># </span><span style="color: #7f9f7f;">gem 'poltergeist'</span>
+<span style="color: #dfdfbf; font-weight: bold;">Konacha</span>.configure <span style="color: #f0dfaf; font-weight: bold;">do</span> |config|
+  require <span style="color: #cc9393;">'capybara/poltergeist'</span>
+  config.driver = <span style="color: #dca3a3; font-weight: bold;">:poltergeist</span>
+<span style="color: #f0dfaf; font-weight: bold;">end</span> <span style="color: #f0dfaf; font-weight: bold;">if</span> <span style="color: #f0dfaf; font-weight: bold;">defined?</span>(<span style="color: #dfdfbf; font-weight: bold;">Konacha</span>)
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-sh"><span style="color: #f0dfaf;">RAILS_ENV</span>=test bundle exec rake konacha:run
+</pre>
+</div>
+</section>
+</section>
+<section id="sec-4" >
+
+<h2>Tips/Discussion</h2>
+</section>
+<section>
+<section id="sec-4-1" >
+
+<h3>Dependencies</h3>
+<ul class="org-ul">
+<li>Load bundled sources as <code>application.js</code>:
+<ul class="org-ul">
+<li>Easy
+</li>
+<li>Not isolated
+</li>
+<li>Less efficient in Konacha
+</li>
+</ul>
+</li>
+<li>Load only required sources
+<ul class="org-ul">
+<li>Disaster if the source file does not define dependencies, the test file
+must require all dependencies recursively.
+</li>
+<li>Isolated
+</li>
+<li>Better performance for Konacha
+</li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section>
+<section id="sec-4-2" >
+
+<h3>Testability</h3>
+<ul class="org-ul">
+<li><code>onready</code>
+</li>
+<li><code>window.location</code>
+</li>
+</ul>
+</section>
+</section>
+<section>
+<section id="sec-4-3" >
+
+<h3>onready</h3>
+<ul class="org-ul">
+<li>Define named callback so it is testable
+</li>
+<li>Add flag to bypass onready callbacks
+</li>
+</ul>
+</section>
+</section>
+<section>
+<section id="sec-4-4" >
+
+<h3>onready Example</h3>
+<div class="org-src-container">
+
+<pre class="src src-coffee"><span style="color: #7f9f7f;"># application.js.coffee</span>
+
+<span style="color: #f0dfaf;">app</span> = <span style="color: #f0dfaf;">@app</span> =
+<span style="background-color: #4f4f4f;"> </span> <span style="color: #dfdfbf; font-weight: bold;">init:</span> <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> $(<span style="color: #cc9393;">'select'</span>).select2()
+
+$ <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> app.init() <span style="color: #f0dfaf; font-weight: bold;">unless</span> app.test?
+
+<span style="color: #7f9f7f;"># spec_helper.js.coffee</span>
+<span style="color: #f0dfaf;">@app</span>.test = <span style="color: #dca3a3; font-weight: bold;">true</span>
+</pre>
+</div>
+</section>
+</section>
+<section>
+<section id="sec-4-5" >
+
+<h3>window.location</h3>
+<ul class="org-ul">
+<li>Avoid using window.location assignment directly, because it cannot be mocked.
+</li>
+<li>Same does Backbone Router. Add flag to bypass router redirection in test.
+</li>
+</ul>
+</section>
+</section>
+<section>
+<section id="sec-4-6" >
+
+<h3>window.location Sample</h3>
+<div class="org-src-container">
+
+<pre class="src src-coffee"><span style="color: #7f9f7f;"># application.js.coffee</span>
+app.redirectTo = (url) <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> window.location = url
+
+<span style="color: #7f9f7f;"># spec_helper.js.coffee</span>
+<span style="color: #7f9f7f;"># overwrite it</span>
+app.redirectTo = (url) <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> app.redirectTo.lastUrl = url
+</pre>
+</div>
+</section>
+</section>

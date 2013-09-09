@@ -1,0 +1,231 @@
+#+Title: Javascript Test Rails Integration
+#+Author: Ian Yang
+#+FILETAGS: javascript:test:rails
+
+#+OPTIONS: reveal_center:t reveal_progress:t reveal_history:nil reveal_control:t
+#+OPTIONS: reveal_mathjax:t reveal_rolling_links:t reveal_keyboard:t reveal_overview:t num:nil
+#+OPTIONS: reveal_width:1200 reveal_height:800
+#+OPTIONS: toc:1
+#+REVEAL_MARGIN: 0.1
+#+REVEAL_MIN_SCALE: 0.5
+#+REVEAL_MAX_SCALE: 2.5
+#+REVEAL_TRANS: linear
+#+REVEAL_THEME: default
+#+REVEAL_HLEVEL: 2
+#+REVEAL_PREAMBLE: ox-reveal-jekyll-preamble
+#+EPRESENT_FRAME_LEVEL: 2
+
+* Rails Integration
+
+- Asset Pipeline Support
+- Ease test driven development
+- CI
+
+* Jasmine
+  :PROPERTIES:
+  :reveal_background: #072933
+  :END:
+
+> [[https://github.com/airportyh/testem][airportyh/testem]]
+
+- Early Rails 4 support
+- CI through phantomjs
+
+** Installation
+  :PROPERTIES:
+  :reveal_background: #072933
+  :END:
+
+#+BEGIN_SRC ruby
+group :test, :development do
+  gem 'jasmine-rails'
+end
+#+END_SRC
+
+#+BEGIN_SRC ruby
+mount JasmineRails::Engine => "/specs" if defined?(JasmineRails)
+#+END_SRC
+
+** Configuration
+  :PROPERTIES:
+  :reveal_background: #072933
+  :END:
+
+=spec/javascripts/support/jasmine.yml=
+
+#+BEGIN_SRC yaml
+src_dir: "app/assets/javascripts"
+src_files:
+ - "application.{js,coffee}"
+spec_dir: spec/javascripts
+helpers:
+  - "helpers/**/*.{js,coffee}"
+spec_files:
+  - "**/*[Ss]pec.{js,coffee}"
+#+END_SRC
+
+** Spec helper
+
+- Configure =helpers= in config file,
+- or require helper files using sprockets directives.
+
+** TDD
+  :PROPERTIES:
+  :reveal_background: #072933
+  :END:
+
+- Livereload
+  - Use =guard-livereload= and livereload browser esxtenion,
+  - or use livereload app.
+
+** Asset Pipeline
+  :PROPERTIES:
+  :reveal_background: #072933
+  :END:
+
+- use =coffee_script= or other Javascript precompilers for source or test files
+- use sprockets directives to control inclusion/exclusion of dependent files
+- leverage asset pipeline search paths to include assets from various sources/gems
+
+** CI
+  :PROPERTIES:
+  :reveal_background: #072933
+  :END:
+
+#+BEGIN_SRC sh
+RAILS_ENV=test bundle exec rake spec:javascript
+#+END_SRC
+
+** Demo Time
+  :PROPERTIES:
+  :reveal_background: #072933
+  :END:
+
+* Mocha
+  :PROPERTIES:
+  :reveal_background: #422D1D
+  :END:
+
+> [[https://github.com/jfirebaugh/konacha][jfirebaugh/konacha]]
+
+- Each test file in its own IFRAME
+  - HTML sandbox
+  - Isolation
+  - Hard to debug (use =debugger=)
+- CI through =phantomjs=
+
+** Installation
+
+#+BEGIN_SRC ruby
+group :test, :development do
+  gem 'konacha'
+  gem 'selenium-webdriver'
+  # gem 'poltergeist'
+end
+#+END_SRC
+
+** Start Sever
+
+#+BEGIN_SRC sh
+bundle exec rake konacha:serve
+#+END_SRC
+
+> http://localhost:3500
+
+** Configuration
+
+=config/initializers/konacha.rb=
+
+#+BEGIN_SRC ruby
+Konacha.configure do |config|
+  config.spec_dir     = "spec/javascripts"
+  config.spec_matcher = /_spec\.|_test\./
+  config.stylesheets  = %w(application)
+  config.driver       = :selenium
+end if defined?(Konacha)
+#+END_SRC
+
+** Spec Helper 
+
+- Require helper files using sprockets directives.
+
+** TDD
+
+- Livereload
+- =guard-konacha=
+
+** Asset Pipeline
+
+The Same with =jasmine-rails=
+
+** CI
+
+#+BEGIN_SRC ruby
+  # gem 'poltergeist'
+  Konacha.configure do |config|
+    require 'capybara/poltergeist'
+    config.driver = :poltergeist
+  end if defined?(Konacha)
+#+END_SRC
+
+#+BEGIN_SRC sh
+RAILS_ENV=test bundle exec rake konacha:run
+#+END_SRC
+
+* Tips/Discussion
+
+** Dependencies
+
+- Load bundled sources as =application.js=:
+  - Easy
+  - Not isolated
+  - Less efficient in Konacha
+- Load only required sources
+  - Disaster if the source file does not define dependencies, the test file
+    must require all dependencies recursively.
+  - Isolated
+  - Better performance for Konacha
+
+** Testability
+
+- =onready=
+- =window.location=
+
+** onready
+
+- Define named callback so it is testable
+- Add flag to bypass onready callbacks
+
+** onready Example
+
+#+BEGIN_SRC coffee
+  # application.js.coffee
+  
+  app = @app =
+    init: ->
+      $('select').select2()
+  
+  $ ->
+    app.init() unless app.test?
+  
+  # spec_helper.js.coffee
+  @app.test = true
+#+END_SRC
+
+** window.location
+
+- Avoid using window.location assignment directly, because it cannot be mocked.
+- Same does Backbone Router. Add flag to bypass router redirection in test.
+
+** window.location Sample
+
+#+BEGIN_SRC coffee
+# application.js.coffee
+app.redirectTo = (url) ->
+  window.location = url
+
+# spec_helper.js.coffee
+# overwrite it
+app.redirectTo = (url) ->
+  app.redirectTo.lastUrl = url
+#+END_SRC
