@@ -1,0 +1,135 @@
+#+Title: Javascript Test - DOM Test
+#+Author: Ian Yang
+#+FILETAGS: javascript:test:rails
+
+#+OPTIONS: reveal_center:t reveal_progress:t reveal_history:nil reveal_control:t
+#+OPTIONS: reveal_mathjax:t reveal_rolling_links:t reveal_keyboard:t reveal_overview:t num:nil
+#+OPTIONS: reveal_width:1200 reveal_height:800
+#+OPTIONS: toc:1
+#+REVEAL_MARGIN: 0.1
+#+REVEAL_MIN_SCALE: 0.5
+#+REVEAL_MAX_SCALE: 2.5
+#+REVEAL_TRANS: linear
+#+REVEAL_THEME: default
+#+REVEAL_HLEVEL: 2
+#+REVEAL_PREAMBLE: ox-reveal-jekyll-preamble
+#+EPRESENT_FRAME_LEVEL: 2
+
+* Memory Only
+
+- Manipulate DOM in memory
+- Not in HTML document
+
+** Pros
+
+- Fast
+- Isolated
+
+** Cons
+
+- Cannot test features depending on rendering size
+- No global selector (indeed a pro)
+
+** Sample
+
+#+BEGIN_SRC javascript
+var view = new Flash();
+view.error("foo");
+expect(view.$('.error').text()).toEqual('foo');
+#+END_SRC
+
+** Use local selector
+
+#+BEGIN_SRC javascript
+Flash.prototype.error = function(message) {
+  this.$el.append($('<div></div>').text(message));
+};
+#+END_SRC
+
+** Add to Document Only When Necessarily
+
+#+BEGIN_SRC javascript
+var Flash = function(el) {
+  if (el == null) {
+    el = $('<div></div>');
+  }
+  this.$el = $(el);
+}
+#+END_SRC
+
+** Backbone View Already Did That For You
+
+* HTML Node as Sandbox
+
+- Use a node in HTML document
+- Rollback changes before each test
+
+** Pros
+
+- Debug using Inspector
+- Able to run tests depending on rendering size
+
+** Cons
+
+- Slow
+- May break test runner
+- May break other tests
+
+** Setup Sandbox Node
+
+#+BEGIN_SRC javascript
+beforeEach(function() {
+  this.htmlSandbox = $('<div class="sandbox"></div>');
+  $('body').append(this.htmlSandbox);
+});
+afterEach(function() {
+  if (this.htmlSandbox) {
+    this.htmlSandbox.remove();
+  }
+});
+#+END_SRC
+
+** Avoid DOM Manipulation Outside the Sandbox Node 
+
+#+BEGIN_SRC javascript
+if ($('body').has('featureX')) {
+  ...
+}
+#+END_SRC
+
+** Avoid DOM Manipulation Outside the Sandbox Node
+
+#+BEGIN_SRC javascript
+var Navbar = function(opts) {
+  if (opts.body) {
+    this.body = opts.body;
+  } else {
+    this.body = $('body')
+  }
+  if (this.body.has('featureX')) {
+    ...
+  }
+}
+#+END_SRC
+
+** Avoid DOM Manipulation Outside the Sandbox Node
+
+#+BEGIN_SRC javascript
+var view = new Navbar({ body: this.htmlSandbox() });
+#+END_SRC
+
+* iframe as Sandbox
+
+** Pros
+
+- Isolated
+- Can take snapshot of your view
+
+** Cons
+
+- Slow
+- Hard to debug
+
+** Konacha
+
+

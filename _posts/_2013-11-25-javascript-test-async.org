@@ -1,0 +1,49 @@
+#+Title: Javascript Test - Async Test
+#+Author: Ian Yang
+#+FILETAGS: javascript:test:rails
+
+#+OPTIONS: reveal_center:t reveal_progress:t reveal_history:nil reveal_control:t
+#+OPTIONS: reveal_mathjax:t reveal_rolling_links:t reveal_keyboard:t reveal_overview:t num:nil
+#+OPTIONS: reveal_width:1200 reveal_height:800
+#+OPTIONS: toc:1
+#+REVEAL_MARGIN: 0.1
+#+REVEAL_MIN_SCALE: 0.5
+#+REVEAL_MAX_SCALE: 2.5
+#+REVEAL_TRANS: linear
+#+REVEAL_THEME: default
+#+REVEAL_HLEVEL: 2
+#+REVEAL_PREAMBLE: ox-reveal-jekyll-preamble
+#+EPRESENT_FRAME_LEVEL: 2
+
+* Framework Support
+
+** Mocha
+
+#+BEGIN_SRC coffee
+  describe 'Async Test', ->
+    a = b = null
+  
+    beforeEach (done) ->
+      setTimeout((-> a = b = 1; done()), 500)
+  
+    it 'passes' , (done) ->
+      setTimeout((->
+        expect(a + b).toEqual(2)
+        done()
+      ), 500)
+#+END_SRC
+
+* Library Support
+
+** Sinon
+
+#+BEGIN_SRC javascript
+this.server.respondWith("GET", "/some/article/comments.json",
+                        [200, { "Content-Type": "application/json" },
+                        '[{ "id": 12, "comment": "Hey there" }]']);
+
+var callback = sinon.spy();
+myLib.getCommentsFor("/some/article", callback);
+this.server.respond(); // async AJAX call is synchronized here
+expect(callback).to.be.called;
+#+END_SRC

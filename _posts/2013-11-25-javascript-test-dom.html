@@ -1,0 +1,242 @@
+---
+layout: presentation
+title: Javascript Test - DOM Test
+tag: [javascript, test, rails]
+description: 
+---
+<section>
+<h1>Javascript Test - DOM Test</h1>
+<h2>Ian Yang</h2>
+<h2><a href="mailto:me@iany.me">me@iany.me</a></h2>
+<h2></h2></section>
+<section>
+<h2>Table of Contents</h2><ul>
+<li>
+<a href="#sec-1">Memory Only</a>
+</li>
+<li>
+<a href="#sec-2">HTML Node as Sandbox</a>
+</li>
+<li>
+<a href="#sec-3">iframe as Sandbox</a>
+</li>
+</ul>
+</section>
+
+<section id="sec-1" >
+
+<h2>Memory Only</h2>
+<ul class="org-ul">
+<li>Manipulate DOM in memory
+</li>
+<li>Not in HTML document
+</li>
+</ul>
+
+</section>
+<section>
+<section id="sec-1-1" >
+
+<h3>Pros</h3>
+<ul class="org-ul">
+<li>Fast
+</li>
+<li>Isolated
+</li>
+</ul>
+</section>
+</section>
+<section>
+<section id="sec-1-2" >
+
+<h3>Cons</h3>
+<ul class="org-ul">
+<li>Cannot test features depending on rendering size
+</li>
+<li>No global selector (indeed a pro)
+</li>
+</ul>
+</section>
+</section>
+<section>
+<section id="sec-1-3" >
+
+<h3>Sample</h3>
+<div class="org-src-container">
+
+<pre class="src src-javascript"><span style="color: #f0dfaf; font-weight: bold;">var</span> <span style="color: #f0dfaf;">view</span> = <span style="color: #f0dfaf; font-weight: bold;">new</span> <span style="color: #dfdfbf; font-weight: bold;">Flash</span>();
+view.error(<span style="color: #cc9393;">"foo"</span>);
+expect(view.$(<span style="color: #cc9393;">'.error'</span>).text()).toEqual(<span style="color: #cc9393;">'foo'</span>);
+</pre>
+</div>
+</section>
+</section>
+<section>
+<section id="sec-1-4" >
+
+<h3>Use local selector</h3>
+<div class="org-src-container">
+
+<pre class="src src-javascript">Flash.<span style="color: #dca3a3; font-weight: bold;">prototype</span>.error = <span style="color: #f0dfaf; font-weight: bold;">function</span>(<span style="color: #f0dfaf;">message</span>) {
+  <span style="color: #dca3a3; font-weight: bold;">this</span>.$el.append($(<span style="color: #cc9393;">'&lt;div&gt;&lt;/div&gt;'</span>).text(message));
+};
+</pre>
+</div>
+</section>
+</section>
+<section>
+<section id="sec-1-5" >
+
+<h3>Add to Document Only When Necessarily</h3>
+<div class="org-src-container">
+
+<pre class="src src-javascript"><span style="color: #f0dfaf; font-weight: bold;">var</span> <span style="color: #f0dfaf;">Flash</span> = <span style="color: #f0dfaf; font-weight: bold;">function</span>(<span style="color: #f0dfaf;">el</span>) {
+  <span style="color: #f0dfaf; font-weight: bold;">if</span> (el == <span style="color: #dca3a3; font-weight: bold;">null</span>) {
+    el = $(<span style="color: #cc9393;">'&lt;div&gt;&lt;/div&gt;'</span>);
+  }
+  <span style="color: #dca3a3; font-weight: bold;">this</span>.$el = $(el);
+}
+</pre>
+</div>
+</section>
+</section>
+<section>
+<section id="sec-1-6" >
+
+<h3>Backbone View Already Did That For You</h3>
+</section>
+</section>
+<section id="sec-2" >
+
+<h2>HTML Node as Sandbox</h2>
+<ul class="org-ul">
+<li>Use a node in HTML document
+</li>
+<li>Rollback changes before each test
+</li>
+</ul>
+
+</section>
+<section>
+<section id="sec-2-1" >
+
+<h3>Pros</h3>
+<ul class="org-ul">
+<li>Debug using Inspector
+</li>
+<li>Able to run tests depending on rendering size
+</li>
+</ul>
+</section>
+</section>
+<section>
+<section id="sec-2-2" >
+
+<h3>Cons</h3>
+<ul class="org-ul">
+<li>Slow
+</li>
+<li>May break test runner
+</li>
+<li>May break other tests
+</li>
+</ul>
+</section>
+</section>
+<section>
+<section id="sec-2-3" >
+
+<h3>Setup Sandbox Node</h3>
+<div class="org-src-container">
+
+<pre class="src src-javascript">beforeEach(<span style="color: #f0dfaf; font-weight: bold;">function</span>() {
+  <span style="color: #dca3a3; font-weight: bold;">this</span>.htmlSandbox = $(<span style="color: #cc9393;">'&lt;div class="sandbox"&gt;&lt;/div&gt;'</span>);
+  $(<span style="color: #cc9393;">'body'</span>).append(<span style="color: #dca3a3; font-weight: bold;">this</span>.htmlSandbox);
+});
+afterEach(<span style="color: #f0dfaf; font-weight: bold;">function</span>() {
+  <span style="color: #f0dfaf; font-weight: bold;">if</span> (<span style="color: #dca3a3; font-weight: bold;">this</span>.htmlSandbox) {
+    <span style="color: #dca3a3; font-weight: bold;">this</span>.htmlSandbox.remove();
+  }
+});
+</pre>
+</div>
+</section>
+</section>
+<section>
+<section id="sec-2-4" >
+
+<h3>Restrict DOM Manipulation Outside the Sandbox Node</h3>
+<div class="org-src-container">
+
+<pre class="src src-javascript"><span style="color: #f0dfaf; font-weight: bold;">if</span> ($(<span style="color: #cc9393;">'body'</span>).has(<span style="color: #cc9393;">'featureX'</span>)) {
+  ...
+}
+</pre>
+</div>
+</section>
+</section>
+<section>
+<section id="sec-2-5" >
+
+<h3>Restrict DOM Manipulation Outside the Sandbox Node</h3>
+<div class="org-src-container">
+
+<pre class="src src-javascript"><span style="color: #f0dfaf; font-weight: bold;">var</span> <span style="color: #f0dfaf;">Navbar</span> = <span style="color: #f0dfaf; font-weight: bold;">function</span>(<span style="color: #f0dfaf;">opts</span>) {
+  <span style="color: #f0dfaf; font-weight: bold;">if</span> (opts.body) {
+    <span style="color: #dca3a3; font-weight: bold;">this</span>.body = opts.body;
+  } <span style="color: #f0dfaf; font-weight: bold;">else</span> {
+    <span style="color: #dca3a3; font-weight: bold;">this</span>.body = $(<span style="color: #cc9393;">'body'</span>)
+  }
+  <span style="color: #f0dfaf; font-weight: bold;">if</span> (<span style="color: #dca3a3; font-weight: bold;">this</span>.body.has(<span style="color: #cc9393;">'featureX'</span>)) {
+    ...
+  }
+}
+</pre>
+</div>
+</section>
+</section>
+<section>
+<section id="sec-2-6" >
+
+<h3>Restrict DOM Manipulation Outside the Sandbox Node</h3>
+<div class="org-src-container">
+
+<pre class="src src-javascript"><span style="color: #f0dfaf; font-weight: bold;">var</span> <span style="color: #f0dfaf;">view</span> = <span style="color: #f0dfaf; font-weight: bold;">new</span> <span style="color: #dfdfbf; font-weight: bold;">Navbar</span>({ body: <span style="color: #dca3a3; font-weight: bold;">this</span>.htmlSandbox() });
+</pre>
+</div>
+</section>
+</section>
+<section id="sec-3" >
+
+<h2>iframe as Sandbox</h2>
+</section>
+<section>
+<section id="sec-3-1" >
+
+<h3>Pros</h3>
+<ul class="org-ul">
+<li>Isolated
+</li>
+<li>Can take snapshot of your view
+</li>
+</ul>
+</section>
+</section>
+<section>
+<section id="sec-3-2" >
+
+<h3>Cons</h3>
+<ul class="org-ul">
+<li>Slow
+</li>
+<li>Hard to debug
+</li>
+</ul>
+</section>
+</section>
+<section>
+<section id="sec-3-3" >
+
+<h3>Konacha</h3>
+</section>
+</section>

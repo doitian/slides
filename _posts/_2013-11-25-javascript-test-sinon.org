@@ -1,0 +1,137 @@
+#+Title: Javascript Test - Sinon
+#+Author: Ian Yang
+#+FILETAGS: javascript:test:rails
+
+#+OPTIONS: reveal_center:t reveal_progress:t reveal_history:nil reveal_control:t
+#+OPTIONS: reveal_mathjax:t reveal_rolling_links:t reveal_keyboard:t reveal_overview:t num:nil
+#+OPTIONS: reveal_width:1200 reveal_height:800
+#+OPTIONS: toc:1
+#+REVEAL_MARGIN: 0.1
+#+REVEAL_MIN_SCALE: 0.5
+#+REVEAL_MAX_SCALE: 2.5
+#+REVEAL_TRANS: linear
+#+REVEAL_THEME: default
+#+REVEAL_HLEVEL: 2
+#+REVEAL_PREAMBLE: ox-reveal-jekyll-preamble
+#+EPRESENT_FRAME_LEVEL: 2
+
+* Spies
+
+** Spies Record Calls
+
+** Used as Callback
+
+#+BEGIN_SRC javascript
+var callback = sinon.spy();
+PubSub.subscribe("message", callback);
+PubSub.publishSync("message");
+expect(callback.called).toBeTrue;
+// sinon-chai
+// expect(callback).to.be.called;
+#+END_SRC
+
+** Spy Existing Function
+
+#+BEGIN_SRC javascript
+beforeEach(function() { sinon.spy(jQuery, "ajax"); });
+afterEach(function () { jQuery.ajax.restore(); });
+
+it("inspects jQuery.getJSON's usage of jQuery.ajax", function () {
+  jQuery.getJSON("/some/resource");
+  assert(jQuery.ajax.calledOnce);
+});
+#+END_SRC
+
+* Stubs
+
+** Stub is a Spy
+
+** Stub can Specify Return Value
+
+#+BEGIN_SRC javascript
+var callback = sinon.stub().returns(42);
+expect(callback()).toEqual(42);
+#+END_SRC
+
+** Stub can Throw
+
+#+BEGIN_SRC javascript
+var callbacks = {
+  success: sinon.spy(),
+  error: sinon.spy()
+}
+var task = sinon.stub().throws();
+perform(task, callbacks);
+expect(callbacks.error).to.be.called;
+expect(callbacks.success).to.not.be.called;
+#+END_SRC
+
+* Mocks
+
+** Mock stubs methods in an object
+
+** Mock can have expectations
+
+#+BEGIN_SRC javascript
+var jquery = sinon.mock($);
+jquery.expects('ajax').once().throws();
+
+perform(task, callbacks);
+expect(callbacks.error).to.be.called;
+expect(callbacks.success).to.not.be.called;
+#+END_SRC
+
+* AJAX
+
+** FakeXMLHttpRequest
+
+- Record AJAX calls
+- Calls are manually responded
+
+** FakeXMLHttpRequest
+
+#+BEGIN_SRC javascript
+beforeEach(function () {
+  this.xhr = sinon.useFakeXMLHttpRequest();
+  var requests = this.requests = [];
+  this.xhr.onCreate = function (xhr) {
+    requests.push(xhr);
+  };
+});
+afterEach(function () {
+  this.xhr.restore();
+});
+it("fetches comments from server", function () {
+  var callback = sinon.spy();
+  myLib.getCommentsFor("/some/article", callback);
+  assertEquals(1, this.requests.length);
+  this.requests[0].respond(200, { "Content-Type": "application/json" },
+                                  '[{ "id": 12, "comment": "Hey there" }]');
+   assert(callback.calledWith([{ id: 12, comment: "Hey there" }]));
+});
+#+END_SRC
+
+** fakeServer
+
+- Setup responses based on URL/action patterns
+- Auto or Manual Responding
+
+** fakeServer
+
+#+BEGIN_SRC javascript
+beforeEach(function () {
+  this.server = sinon.fakeServer.create();
+});
+afterEach(function () {
+  this.server.restore();
+});
+it("fetches comments from server" : function () {
+  this.server.respondWith("GET", "/some/article/comments.json",
+                          [200, { "Content-Type": "application/json" },
+                          '[{ "id": 12, "comment": "Hey there" }]']);
+  var callback = sinon.spy();
+  myLib.getCommentsFor("/some/article", callback);
+  this.server.respond();
+  sinon.assert.calledWith(callback, [{ id: 12, comment: "Hey there" }]);
+});
+#+END_SRC

@@ -1,0 +1,221 @@
+---
+layout: presentation
+title: Javascript Test - Sinon
+tag: [javascript, test, rails]
+description: 
+---
+<section>
+<h1>Javascript Test - Sinon</h1>
+<h2>Ian Yang</h2>
+<h2><a href="mailto:me@iany.me">me@iany.me</a></h2>
+<h2></h2></section>
+<section>
+<h2>Table of Contents</h2><ul>
+<li>
+<a href="#sec-1">Spies</a>
+</li>
+<li>
+<a href="#sec-2">Stubs</a>
+</li>
+<li>
+<a href="#sec-3">Mocks</a>
+</li>
+<li>
+<a href="#sec-4">AJAX</a>
+</li>
+</ul>
+</section>
+
+<section id="sec-1" >
+
+<h2>Spies</h2>
+</section>
+<section>
+<section id="sec-1-1" >
+
+<h3>Spies Record Calls</h3>
+</section>
+
+</section>
+<section>
+<section id="sec-1-2" >
+
+<h3>Used as Callback</h3>
+<div class="org-src-container">
+
+<pre class="src src-javascript"><span style="color: #f0dfaf; font-weight: bold;">var</span> <span style="color: #f0dfaf;">callback</span> = sinon.spy();
+PubSub.subscribe(<span style="color: #cc9393;">"message"</span>, callback);
+PubSub.publishSync(<span style="color: #cc9393;">"message"</span>);
+expect(callback.called).toBeTrue;
+<span style="color: #708070;">// </span><span style="color: #7f9f7f;">sinon-chai</span>
+<span style="color: #708070;">// </span><span style="color: #7f9f7f;">expect(callback).to.be.called;</span>
+</pre>
+</div>
+</section>
+</section>
+<section>
+<section id="sec-1-3" >
+
+<h3>Spy Existing Function</h3>
+<div class="org-src-container">
+
+<pre class="src src-javascript">beforeEach(<span style="color: #f0dfaf; font-weight: bold;">function</span>() { sinon.spy(jQuery, <span style="color: #cc9393;">"ajax"</span>); });
+afterEach(<span style="color: #f0dfaf; font-weight: bold;">function</span> () { jQuery.ajax.restore(); });
+
+it(<span style="color: #cc9393;">"inspects jQuery.getJSON's usage of jQuery.ajax"</span>, <span style="color: #f0dfaf; font-weight: bold;">function</span> () {
+  jQuery.getJSON(<span style="color: #cc9393;">"/some/resource"</span>);
+  assert(jQuery.ajax.calledOnce);
+});
+</pre>
+</div>
+</section>
+</section>
+<section id="sec-2" >
+
+<h2>Stubs</h2>
+</section>
+<section>
+<section id="sec-2-1" >
+
+<h3>Stub is a Spy</h3>
+</section>
+
+</section>
+<section>
+<section id="sec-2-2" >
+
+<h3>Stub can Specify Return Value</h3>
+<div class="org-src-container">
+
+<pre class="src src-javascript"><span style="color: #f0dfaf; font-weight: bold;">var</span> <span style="color: #f0dfaf;">callback</span> = sinon.stub().returns(42);
+expect(callback()).toEqual(42);
+</pre>
+</div>
+</section>
+</section>
+<section>
+<section id="sec-2-3" >
+
+<h3>Stub can Throw</h3>
+<div class="org-src-container">
+
+<pre class="src src-javascript"><span style="color: #f0dfaf; font-weight: bold;">var</span> <span style="color: #f0dfaf;">callbacks</span> = {
+  success: sinon.spy(),
+  error: sinon.spy()
+}
+<span style="color: #f0dfaf; font-weight: bold;">var</span> <span style="color: #f0dfaf;">task</span> = sinon.stub().<span style="color: #f0dfaf; font-weight: bold;">throws</span>();
+perform(task, callbacks);
+expect(callbacks.error).to.be.called;
+expect(callbacks.success).to.not.be.called;
+</pre>
+</div>
+</section>
+</section>
+<section id="sec-3" >
+
+<h2>Mocks</h2>
+</section>
+<section>
+<section id="sec-3-1" >
+
+<h3>Mock stubs methods in an object</h3>
+</section>
+
+</section>
+<section>
+<section id="sec-3-2" >
+
+<h3>Mock can have expectations</h3>
+<div class="org-src-container">
+
+<pre class="src src-javascript"><span style="color: #f0dfaf; font-weight: bold;">var</span> <span style="color: #f0dfaf;">jquery</span> = sinon.mock($);
+jquery.expects(<span style="color: #cc9393;">'ajax'</span>).once().<span style="color: #f0dfaf; font-weight: bold;">throws</span>();
+
+perform(task, callbacks);
+expect(callbacks.error).to.be.called;
+expect(callbacks.success).to.not.be.called;
+</pre>
+</div>
+</section>
+</section>
+<section id="sec-4" >
+
+<h2>AJAX</h2>
+</section>
+<section>
+<section id="sec-4-1" >
+
+<h3>FakeXMLHttpRequest</h3>
+<ul class="org-ul">
+<li>Record AJAX calls
+</li>
+<li>Calls are manually responded
+</li>
+</ul>
+</section>
+</section>
+<section>
+<section id="sec-4-2" >
+
+<h3>FakeXMLHttpRequest</h3>
+<div class="org-src-container">
+
+<pre class="src src-javascript">beforeEach(<span style="color: #f0dfaf; font-weight: bold;">function</span> () {
+  <span style="color: #dca3a3; font-weight: bold;">this</span>.xhr = sinon.useFakeXMLHttpRequest();
+  <span style="color: #f0dfaf; font-weight: bold;">var</span> <span style="color: #f0dfaf;">requests</span> = <span style="color: #dca3a3; font-weight: bold;">this</span>.requests = [];
+  <span style="color: #dca3a3; font-weight: bold;">this</span>.xhr.onCreate = <span style="color: #f0dfaf; font-weight: bold;">function</span> (<span style="color: #f0dfaf;">xhr</span>) {
+    requests.push(xhr);
+  };
+});
+afterEach(<span style="color: #f0dfaf; font-weight: bold;">function</span> () {
+  <span style="color: #dca3a3; font-weight: bold;">this</span>.xhr.restore();
+});
+it(<span style="color: #cc9393;">"fetches comments from server"</span>, <span style="color: #f0dfaf; font-weight: bold;">function</span> () {
+  <span style="color: #f0dfaf; font-weight: bold;">var</span> <span style="color: #f0dfaf;">callback</span> = sinon.spy();
+  myLib.getCommentsFor(<span style="color: #cc9393;">"/some/article"</span>, callback);
+  assertEquals(1, <span style="color: #dca3a3; font-weight: bold;">this</span>.requests.length);
+  <span style="color: #dca3a3; font-weight: bold;">this</span>.requests[0].respond(200, { <span style="color: #cc9393;">"Content-Type"</span>: <span style="color: #cc9393;">"application/json"</span> },
+                                  <span style="color: #cc9393;">'[{ "id": 12, "comment": "Hey there" }]'</span>);
+   assert(callback.calledWith([{ id: 12, comment: <span style="color: #cc9393;">"Hey there"</span> }]));
+});
+</pre>
+</div>
+</section>
+</section>
+<section>
+<section id="sec-4-3" >
+
+<h3>fakeServer</h3>
+<ul class="org-ul">
+<li>Setup responses based on URL/action patterns
+</li>
+<li>Auto or Manual Responding
+</li>
+</ul>
+</section>
+</section>
+<section>
+<section id="sec-4-4" >
+
+<h3>fakeServer</h3>
+<div class="org-src-container">
+
+<pre class="src src-javascript">beforeEach(<span style="color: #f0dfaf; font-weight: bold;">function</span> () {
+  <span style="color: #dca3a3; font-weight: bold;">this</span>.server = sinon.fakeServer.create();
+});
+afterEach(<span style="color: #f0dfaf; font-weight: bold;">function</span> () {
+  <span style="color: #dca3a3; font-weight: bold;">this</span>.server.restore();
+});
+it(<span style="color: #cc9393;">"fetches comments from server"</span> : <span style="color: #f0dfaf; font-weight: bold;">function</span> () {
+  <span style="color: #dca3a3; font-weight: bold;">this</span>.server.respondWith(<span style="color: #cc9393;">"GET"</span>, <span style="color: #cc9393;">"/some/article/comments.json"</span>,
+                          [200, { <span style="color: #cc9393;">"Content-Type"</span>: <span style="color: #cc9393;">"application/json"</span> },
+                          <span style="color: #cc9393;">'[{ "id": 12, "comment": "Hey there" }]'</span>]);
+  <span style="color: #f0dfaf; font-weight: bold;">var</span> <span style="color: #f0dfaf;">callback</span> = sinon.spy();
+  myLib.getCommentsFor(<span style="color: #cc9393;">"/some/article"</span>, callback);
+  <span style="color: #dca3a3; font-weight: bold;">this</span>.server.respond();
+  sinon.assert.calledWith(callback, [{ id: 12, comment: <span style="color: #cc9393;">"Hey there"</span> }]);
+});
+</pre>
+</div>
+</section>
+</section>

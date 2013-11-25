@@ -1,0 +1,69 @@
+---
+layout: presentation
+title: Javascript Test - Async Test
+tag: [javascript, test, rails]
+description: 
+---
+<section>
+<h1>Javascript Test - Async Test</h1>
+<h2>Ian Yang</h2>
+<h2><a href="mailto:me@iany.me">me@iany.me</a></h2>
+<h2></h2></section>
+<section>
+<h2>Table of Contents</h2><ul>
+<li>
+<a href="#sec-1">Framework Support</a>
+</li>
+<li>
+<a href="#sec-2">Library Support</a>
+</li>
+</ul>
+</section>
+
+<section id="sec-1" >
+
+<h2>Framework Support</h2>
+</section>
+<section>
+<section id="sec-1-1" >
+
+<h3>Mocha</h3>
+<div class="org-src-container">
+
+<pre class="src src-coffee">describe <span style="color: #cc9393;">'Async Test'</span>, <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="color: #f0dfaf;">a</span> = b = <span style="color: #dca3a3; font-weight: bold;">null</span>
+
+<span style="background-color: #4f4f4f;"> </span> beforeEach (done) <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> setTimeout((<span style="color: #f0dfaf;">-&gt;</span> <span style="color: #f0dfaf;">a</span> = b = 1; done()), 500)
+
+<span style="background-color: #4f4f4f;"> </span> it <span style="color: #cc9393;">'passes'</span> , (done) <span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> setTimeout((<span style="color: #f0dfaf;">-&gt;</span>
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> expect(a + b).toEqual(2)
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> done()
+<span style="background-color: #4f4f4f;"> </span> <span style="background-color: #4f4f4f;"> </span> ), 500)
+</pre>
+</div>
+</section>
+</section>
+<section id="sec-2" >
+
+<h2>Library Support</h2>
+</section>
+<section>
+<section id="sec-2-1" >
+
+<h3>Sinon</h3>
+<div class="org-src-container">
+
+<pre class="src src-javascript"><span style="color: #dca3a3; font-weight: bold;">this</span>.server.respondWith(<span style="color: #cc9393;">"GET"</span>, <span style="color: #cc9393;">"/some/article/comments.json"</span>,
+                        [200, { <span style="color: #cc9393;">"Content-Type"</span>: <span style="color: #cc9393;">"application/json"</span> },
+                        <span style="color: #cc9393;">'[{ "id": 12, "comment": "Hey there" }]'</span>]);
+
+<span style="color: #f0dfaf; font-weight: bold;">var</span> <span style="color: #f0dfaf;">callback</span> = sinon.spy();
+myLib.getCommentsFor(<span style="color: #cc9393;">"/some/article"</span>, callback);
+<span style="color: #dca3a3; font-weight: bold;">this</span>.server.respond(); <span style="color: #708070;">// </span><span style="color: #7f9f7f;">async AJAX call is synchronized here</span>
+expect(callback).to.be.called;
+</pre>
+</div>
+</section>
+</section>
